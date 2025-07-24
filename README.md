@@ -3,7 +3,7 @@ Shareable code, data, and methods guide for Meisler et al. (_in preparation_).
 
 This paper describes the processing, quality control, and informatics analyses of the diffusion MRI (dMRI) data from the ABCD-BIDS Community Collection (ABCC) data realease 3.0.0.
 
-## File organization on CUBIC
+## File organization on CUBIC (for PennLINC internal users)
 
 ```
 /path/to/project/
