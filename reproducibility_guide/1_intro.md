@@ -1,0 +1,53 @@
+# Introduction
+
+The project descries the pre- and post-processing of dMRI data from the [ABCD-BIDS Community Collection (ABCC)](https://docs.abcdstudy.org/v/6_0_0/documentation/imaging/abcc_start_page.html). Release 3.1.0 includes fully processed images from over 25,000 sessions. In this paper we describe the pre- and post-processing of dMRI data. We also evaluate which of the derived dMRI measures are most sensitive to development and robust to variation in image quality. We also manually inspect the quality of a subset of dMRI data, and trained a multivariate classifier to predict expert ratings based on automated image quality statistics. The following chapters describe the steps used for each of these processes.
+
+```{warning}
+Some of these steps are only meant to be replicated by PennLINC lab members, and some steps are are no longer possible due to changes in the central data infrastructure for ABCD. However, these steps mainly pertain to data processing, data wrangling, and performing the manual ratings - all things that do not warrant replication! Rest assured that the code for the primary analyses are reproducible and will work as long as data are wrangled correctly.
+```
+
+```{note}
+Please note that access to the data release is limited to researchers with a valid ABCD/HBCD Data Use Certification (https://www.nbdc-datahub.org/).
+```
+
+This guide _also_ acts as a data narrative, adding details and context that were not appropriate for the publication.
+
+```{note}
+For the PennLINC Reproducibilibuddy: Please start at the **"Automated Classifier QC"**[#automated-classifier-qc] step
+```
+
+### Software
+Although you will not be reprocessing this data, note that we used the following software for processing the data:
+
+- [QSIPrep 0.21.4](https://qsiprep.readthedocs.io/en/latest/usage.html) (`singularity build qsiprep_0.21.4.sif docker://pennlinc/qsiprep:0.21.4`)
+- [QSIRecon 1.0.0rc2](https://qsirecon.readthedocs.io/en/latest/usage.html) (`singularity build qsirecon_1.0.0rc2.sif docker://pennlinc/qsirecon:1.0.0rc2`)
+
+A computational environment must have the following packages (and dependencies):
+- R:
+```
+install.packages(c(
+  "arrow",
+  "ComBatFamily",
+  "dplyr",
+  "fs",
+  "gamm4",
+  "ggplot2",
+  "ggpubr",
+  "gridExtra",
+  "gt",
+  "mgcv",
+  "MuMIn",
+  "purrr",
+  "readr",
+  "rlang",
+  "rstatix",
+  "sankey",
+  "stringr",
+  "tibble",
+  "tidyr"
+))
+```
+- Python:
+```
+pip install ipython joblib matplotlib numpy pandas scikit-learn scikit-optimize scipy seaborn xgboost
+```

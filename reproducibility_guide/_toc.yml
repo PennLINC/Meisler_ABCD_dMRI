@@ -2,7 +2,11 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
-root: 0_intro
+root: 0_basic_info
 chapters:
-- file: 1_preworkshop_reading
+- file: 1_intro
+- file: 2_preprocessing
+- file: 3_postprocessing
+- file: 4_data_munging
+- file: 5_manual_rating
 - file: bibliography
