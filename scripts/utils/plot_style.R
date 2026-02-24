@@ -10,7 +10,21 @@
 # - Export: get_export_font_family, save_plot_outputs (requires fs)
 # - Bundle labels: bundle_category_label_map, category_label_map (alias),
 #   bundle_category_order_pretty, category_order_pretty (alias)
+# - Core microstructural metrics: metrics_keep, metric_labels, metric_order
+#   (used by Figure 3, 4, 5, 6)
 # ------------------------------------------------------------------------------
+
+# Five core microstructural metrics and display labels (shared by Figure 3–6).
+metrics_keep <- c("DKI_mkt", "NODDI_icvf", "MAPMRI_rtop", "GQI_fa", "GQI_md")
+metric_labels <- c(
+  "DKI_mkt" = "MKT",
+  "NODDI_icvf" = "ICVF",
+  "MAPMRI_rtop" = "RTOP",
+  "GQI_fa" = "FA",
+  "GQI_md" = "MD"
+)
+# Display order for factor levels (same order as metrics_keep, as display names).
+metric_order <- unname(metric_labels[metrics_keep])
 
 # Fixed color dictionaries to stay consistent across all figures.
 metric_colors <- c(
