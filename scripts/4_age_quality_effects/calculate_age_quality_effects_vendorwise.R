@@ -298,6 +298,25 @@ run_pair_for_source <- function(df, source_label, metric, qc_metric, bundle_cols
         NA_real_
       }
 
+      # Age effect from model WITHOUT QC (for scatter: age slope no QC vs with QC)
+      newdat_age_no_qc <- data.frame(
+        age = c(age_min, age_max),
+        sex = levels(this_dat$sex)[1]
+      )
+      pred_age_no_qc <- if (!is_no_quality) {
+        tryCatch(
+          predict(red_qc_mod$gam, newdata = newdat_age_no_qc),
+          error = function(e) c(NA_real_, NA_real_)
+        )
+      } else {
+        pred_age
+      }
+      age_percent_change_no_qc <- if (is.finite(pred_age_no_qc[1]) && pred_age_no_qc[1] != 0) {
+        100 * (pred_age_no_qc[2] - pred_age_no_qc[1]) / pred_age_no_qc[1]
+      } else {
+        NA_real_
+      }
+
       qc_percent_change <- if (!is_no_quality) {
         qc_lo <- quantile(this_dat$qc_var, 0.10, na.rm = TRUE)
         qc_hi <- quantile(this_dat$qc_var, 0.90, na.rm = TRUE)
@@ -352,6 +371,7 @@ run_pair_for_source <- function(df, source_label, metric, qc_metric, bundle_cols
         age_effect_size = r2_full - r2_red_age,
         qc_effect_size = if (!is_no_quality) r2_full - r2_red_qc else NA_real_,
         percent_change_age = age_percent_change,
+        percent_change_age_no_qc = age_percent_change_no_qc,
         percent_change_qc = qc_percent_change,
         aic_full = full_diag$aic,
         aic_reduced_age = red_age_diag$aic,
