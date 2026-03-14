@@ -1,12 +1,12 @@
 #!/usr/bin/env Rscript
 
 # ============================================================
-# CALCULATE VENDOR EFFECTS (TASK MODE, NONLINEAR GAMM)
+# CALCULATE BATCH EFFECTS (TASK MODE, NONLINEAR GAMM)
 # ============================================================
 # Purpose:
-#   Run one metric x one QC-metric task (from CLI args), estimating vendor
+#   Run one metric x one QC-metric task (from CLI args), estimating batch
 #   effects using delta R^2 between:
-#     - full model:    value ~ s(age) + sex + s(qc_var) + scanner_manufacturer
+#     - full model:    value ~ s(age) + sex + s(qc_var) + batch_device_software
 #     - reduced model: value ~ s(age) + sex + s(qc_var)
 #   Runs on both raw and assembled harmonized data.
 # ============================================================
@@ -65,7 +65,7 @@ parse_args <- function() {
   }
 
   if (!nzchar(metric) || !nzchar(qc_metric)) {
-    stop("Usage: calculate_vendor_effects.R --metric <metric> --qc_metric <qc_metric>")
+    stop("Usage: calculate_batch_effects.R --metric <metric> --qc_metric <qc_metric>")
   }
 
   list(metric = metric, qc_metric = qc_metric)
@@ -102,11 +102,11 @@ if (!is_no_quality && !qc_metric %in% qc_metrics) {
   stop("QC metric not in config image_quality_metrics: ", qc_metric)
 }
 
-log_info("Running vendor-effects GAMM for metric:", metric, "| qc_metric:", qc_metric)
+log_info("Running batch-effects GAMM for metric:", metric, "| qc_metric:", qc_metric)
 
 raw_file <- fs::path(PROJECT_ROOT, "data", "raw_data", "merged_data_meisler_analyses.parquet")
 harmonized_file <- fs::path(PROJECT_ROOT, "data", "harmonized_data", "merged_data_meisler_analyses_harmonized.parquet")
-out_dir <- fs::path(PROJECT_ROOT, "data", "vendor_effects", "vendor_effects_outputs")
+out_dir <- fs::path(PROJECT_ROOT, "data", "batch_effects", "batch_effects_outputs")
 dir_create(out_dir, recurse = TRUE)
 
 if (!file_exists(raw_file)) {
@@ -117,21 +117,25 @@ if (!file_exists(harmonized_file)) {
 }
 
 qc_safe <- gsub("[^A-Za-z0-9_]+", "_", qc_metric)
-out_file <- fs::path(out_dir, paste0(metric, "__", qc_safe, "_vendor_effects.rds"))
+out_file <- fs::path(out_dir, paste0(metric, "__", qc_safe, "_batch_effects.rds"))
 if (file_exists(out_file)) {
   log_info("Output already exists, skipping:", out_file)
   quit(status = 0)
 }
 
-run_vendor_effect <- function(df, bundle_cols, metric, qc_covariate, source_label) {
+run_batch_effect <- function(df, bundle_cols, metric, qc_covariate, source_label) {
   results <- list()
-  required_covars <- c("subject_id", "sex", "age", "scanner_manufacturer")
+  required_covars <- c("subject_id", "sex", "age", "batch_device_software")
   if (!is_no_quality) {
     required_covars <- c(required_covars, qc_covariate)
   }
 
   if (!is_no_quality && !qc_covariate %in% names(df)) {
     log_info("QC metric not found in", source_label, "parquet:", qc_covariate, "- skipping source.")
+    return(tibble())
+  }
+  if (!"batch_device_software" %in% names(df)) {
+    log_info("batch_device_software not found in", source_label, "parquet - skipping source.")
     return(tibble())
   }
 
@@ -150,11 +154,11 @@ run_vendor_effect <- function(df, bundle_cols, metric, qc_covariate, source_labe
           value = safe_numeric(value),
           subject_id = factor(subject_id),
           sex = factor(sex),
-          scanner_manufacturer = factor(scanner_manufacturer)
+          batch_device_software = factor(batch_device_software)
         ) %>%
         filter(
           !is.na(value),
-          !is.na(scanner_manufacturer),
+          !is.na(batch_device_software),
           !is.na(age),
           !is.na(sex)
         )
@@ -167,11 +171,11 @@ run_vendor_effect <- function(df, bundle_cols, metric, qc_covariate, source_labe
           value = safe_numeric(value),
           subject_id = factor(subject_id),
           sex = factor(sex),
-          scanner_manufacturer = factor(scanner_manufacturer)
+          batch_device_software = factor(batch_device_software)
         ) %>%
         filter(
           !is.na(value),
-          !is.na(scanner_manufacturer),
+          !is.na(batch_device_software),
           !is.na(age),
           !is.na(sex),
           !is.na(qc_covar)
@@ -185,7 +189,7 @@ run_vendor_effect <- function(df, bundle_cols, metric, qc_covariate, source_labe
     if (is_no_quality) {
       full_mod <- tryCatch(
         gamm4(
-          formula = value ~ s(age, k = 4) + sex + scanner_manufacturer,
+          formula = value ~ s(age, k = 4) + sex + batch_device_software,
           random = ~(1 + age | subject_id),
           data = dat
         ),
@@ -206,7 +210,7 @@ run_vendor_effect <- function(df, bundle_cols, metric, qc_covariate, source_labe
     } else {
       full_mod <- tryCatch(
         gamm4(
-          formula = value ~ s(age, k = 4) + sex + s(qc_covar, k = 4) + scanner_manufacturer,
+          formula = value ~ s(age, k = 4) + sex + s(qc_covar, k = 4) + batch_device_software,
           random = ~(1 + age | subject_id),
           data = dat
         ),
@@ -240,11 +244,11 @@ run_vendor_effect <- function(df, bundle_cols, metric, qc_covariate, source_labe
     red_diag <- extract_model_diagnostics(red_mod)
     delta_aic <- red_diag$aic - full_diag$aic
 
-    manuf_p <- tryCatch({
+    batch_p <- tryCatch({
       coefs <- summary(full_mod$gam)$p.table
-      manuf_rows <- grep("^scanner_manufacturer", rownames(coefs))
-      if (length(manuf_rows) > 0) {
-        max(coefs[manuf_rows, "Pr(>|t|)"], na.rm = TRUE)
+      batch_rows <- grep("^batch_device_software", rownames(coefs))
+      if (length(batch_rows) > 0) {
+        max(coefs[batch_rows, "Pr(>|t|)"], na.rm = TRUE)
       } else {
         NA_real_
       }
@@ -257,7 +261,7 @@ run_vendor_effect <- function(df, bundle_cols, metric, qc_covariate, source_labe
       source = source_label,
       qc_covariate = qc_covariate,
       n_obs = nrow(dat),
-      p_vendor = manuf_p,
+      p_batch = batch_p,
       r2_full = r2_full,
       r2_reduced = r2_red,
       effect_size = delta_r2,
@@ -286,7 +290,7 @@ harm_bundle_cols <- grep(
 )
 
 if (length(harm_bundle_cols) > 0) {
-  res_harm <- run_vendor_effect(df_harm, harm_bundle_cols, metric, qc_metric, "harmonized")
+  res_harm <- run_batch_effect(df_harm, harm_bundle_cols, metric, qc_metric, "harmonized")
 } else {
   log_info("No harmonized bundle columns found for", metric, "- skipping harmonized analysis.")
   res_harm <- tibble()
@@ -296,7 +300,7 @@ df_raw <- read_parquet(raw_file)
 raw_bundle_cols <- intersect(harm_bundle_cols, names(df_raw))
 
 if (length(raw_bundle_cols) > 0) {
-  res_raw <- run_vendor_effect(df_raw, raw_bundle_cols, metric, qc_metric, "raw")
+  res_raw <- run_batch_effect(df_raw, raw_bundle_cols, metric, qc_metric, "raw")
 } else {
   log_info(
     "No raw bundle columns matching harmonized bundle set found for",
@@ -310,7 +314,7 @@ res_all <- bind_rows(res_raw, res_harm)
 
 if (nrow(res_all) > 0) {
   saveRDS(res_all, out_file)
-  log_info("Saved vendor effects for metric:", metric, "| qc_metric:", qc_metric)
+  log_info("Saved batch effects for metric:", metric, "| qc_metric:", qc_metric)
   log_info("Output file:", out_file)
 } else {
   log_info("No valid results for metric:", metric, "| qc_metric:", qc_metric)

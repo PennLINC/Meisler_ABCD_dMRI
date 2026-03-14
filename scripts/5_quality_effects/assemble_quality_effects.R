@@ -1,13 +1,13 @@
 #!/usr/bin/env Rscript
 
 # ============================================================
-# ASSEMBLE AGE–QUALITY EFFECTS
+# ASSEMBLE QUALITY EFFECTS
 # ============================================================
 # Purpose:
-#   Combine age–quality effects outputs into one table:
-#     1) non-vendorwise outputs (age_quality_effects_outputs)
-#     2) vendorwise outputs (age_quality_effects_outputs_vendorwise)
-#   and standardize columns for downstream plotting/analysis.
+#   Combine quality-effect outputs into one table:
+#     1) Pooled: quality_effects_outputs (metric__qc_quality_effects.rds)
+#     2) Vendorwise: quality_effects_outputs_vendorwise (metric__qc__VENDOR_quality_effects_by_vendor.rds)
+#   Quality effects only (image_quality_metrics, no no_quality). Harmonized data.
 # ============================================================
 
 suppressPackageStartupMessages({
@@ -36,35 +36,35 @@ if (!fs::file_exists(config_path)) {
 
 config <- jsonlite::fromJSON(config_path)
 project_root <- normalizePath(config$project_root, mustWork = FALSE)
-base_dir <- fs::path(project_root, "data", "age_quality_effects")
-non_vendor_dir <- fs::path(base_dir, "age_quality_effects_outputs")
-vendor_dir <- fs::path(base_dir, "age_quality_effects_outputs_vendorwise")
+base_dir <- fs::path(project_root, "data", "quality_effects")
+non_vendor_dir <- fs::path(base_dir, "quality_effects_outputs")
+vendor_dir <- fs::path(base_dir, "quality_effects_outputs_vendorwise")
 
 if (!fs::dir_exists(non_vendor_dir) && !fs::dir_exists(vendor_dir)) {
   stop(
-    "No age–quality output directories found. Checked:\n",
+    "No quality-effect output directories found. Checked:\n",
     " - ", non_vendor_dir, "\n",
     " - ", vendor_dir
   )
 }
 
 non_vendor_files <- if (fs::dir_exists(non_vendor_dir)) {
-  fs::dir_ls(non_vendor_dir, glob = "*_age_quality_effects.rds")
+  fs::dir_ls(non_vendor_dir, glob = "*_quality_effects.rds")
 } else {
   character(0)
 }
 
 vendor_files <- if (fs::dir_exists(vendor_dir)) {
-  fs::dir_ls(vendor_dir, glob = "*_age_quality_effects_by_vendor.rds")
+  fs::dir_ls(vendor_dir, glob = "*_quality_effects_by_vendor.rds")
 } else {
   character(0)
 }
 
 if (length(non_vendor_files) == 0 && length(vendor_files) == 0) {
   stop(
-    "No age–quality effect RDS files found. Checked:\n",
-    " - ", non_vendor_dir, "/*_age_quality_effects.rds\n",
-    " - ", vendor_dir, "/*_age_quality_effects_by_vendor.rds"
+    "No quality-effect RDS files found. Checked:\n",
+    " - ", non_vendor_dir, "/*_quality_effects.rds\n",
+    " - ", vendor_dir, "/*_quality_effects_by_vendor.rds"
   )
 }
 
@@ -109,13 +109,13 @@ load_vendor_file <- function(f) {
   df
 }
 
-log_info("Loading age–quality effect files")
+log_info("Loading quality-effect files")
 combined_non_vendor <- map_dfr(non_vendor_files, load_non_vendor_file)
 combined_vendor <- map_dfr(vendor_files, load_vendor_file)
 combined <- bind_rows(combined_non_vendor, combined_vendor)
 
-out_rds <- fs::path(base_dir, "age_quality_effects_all_outputs.rds")
+out_rds <- fs::path(base_dir, "quality_effects_all_outputs.rds")
 saveRDS(combined, out_rds)
 
-log_info("Saved combined age–quality effects rows:", nrow(combined))
+log_info("Saved combined quality-effect rows:", nrow(combined))
 log_info("Saved:", out_rds)

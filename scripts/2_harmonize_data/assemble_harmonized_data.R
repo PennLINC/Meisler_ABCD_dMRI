@@ -144,6 +144,7 @@ harmonized_clean <- harmonized_wide %>%
   rename_with(~ str_remove(.x, "_harmonized$"), .cols = all_of(harm_cols_all))
 
 # Drop all original bundle stats (raw mean/median/etc.) from base dataframe.
+# All other base columns (e.g. batch_device_software, scanner_manufacturer, IQMs) are retained.
 raw_bundle_cols <- names(base_df)[str_starts(names(base_df), "bundle_")]
 
 merged_df <- base_df %>%

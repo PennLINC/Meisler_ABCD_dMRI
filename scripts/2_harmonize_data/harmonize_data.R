@@ -74,7 +74,7 @@ if (!file_exists(input_parquet)) {
 }
 
 # Model constants
-batch_col <- "site"
+batch_col <- "batch_device_software"
 age_col <- "age"
 sex_col <- "sex"
 id_col <- "subject_id"
@@ -135,24 +135,6 @@ df <- read_parquet(input_parquet) %>%
   )
 log_info("Rows after required covariate filtering:", nrow(df))
 
-# Philips software split for adjusted batching
-df <- df %>%
-  mutate(
-    scanner_version_num = suppressWarnings(
-      as.numeric(sub("^\"?(\\d+\\.\\d+).*", "\\1", scanner_software))
-    ),
-    site_adjusted = case_when(
-      scanner_manufacturer == "Philips" &
-        !is.na(scanner_version_num) &
-        scanner_version_num < 5.6 ~ paste0(site, "_philips_pre56"),
-      scanner_manufacturer == "Philips" &
-        !is.na(scanner_version_num) &
-        scanner_version_num >= 5.6 ~ paste0(site, "_philips_post56"),
-      TRUE ~ as.character(site)
-    ),
-    site_adjusted = factor(site_adjusted)
-  )
-
 # ============================================================
 # COLLECT COLUMNS FOR THIS TASK
 # ============================================================
@@ -187,7 +169,7 @@ gam_formula <- as.formula(
   paste0("y ~ s(", age_col, ", k = ", k_age, ") + ", sex_col)
 )
 
-batch_vector <- droplevels(df$site_adjusted)
+batch_vector <- droplevels(df[[batch_col]])
 covariates <- df[, c(age_col, sex_col, id_col), drop = FALSE]
 
 df[raw_cols] <- lapply(df[raw_cols], function(x) suppressWarnings(as.numeric(as.character(x))))
@@ -219,8 +201,7 @@ fit <- comfam(
   formula = gam_formula,
   random = ~(1 + age | subject_id),
   eb = TRUE,
-  verbose = TRUE,
-  ref.batch = "16"
+  verbose = TRUE
 )
 
 # ============================================================
@@ -243,3 +224,4 @@ out_df <- df %>%
 write_parquet(out_df, output_file)
 log_info("Saved:", output_file)
 log_info("Done.")
+
