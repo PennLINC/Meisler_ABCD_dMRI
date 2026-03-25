@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<style>
+
+body{
+font-family: Arial, Helvetica, sans-serif;
+background:#f4f4f4;
+margin:20px;
+}
+
+table{
+border-collapse: collapse;
+width:100%;
+background:white;
+font-size:14px;
+}
+
+th{
+background:#d9d9d9;
+padding:8px;
+text-align:left;
+border-bottom:3px solid #bfbfbf;
+}
+
+td{
+padding:8px;
+border-bottom:1px solid #cfcfcf;
+}
+
+.section{
+background:#e6e6e6;
+font-weight:bold;
+border-top:2px solid #bfbfbf;
+font-size:15px;
+}
+
+code{
+font-family:"Courier New", monospace;
+background:#f2f2f2;
+padding:2px 4px;
+border-radius:3px;
+}
+
+.kurtosis{background:#d8c9d9;}
+.mean{background:#e9dfc8;}
+.aniso{background:#d7e3d5;}
+.neutral{background:#e3e3e3;}
+
+</style>
+</head>
+
+<body>
+
+<table>
+
+<tr>
+<th>Model</th>
+<th>Parameter</th>
+<th>Description</th>
+<th>Shells</th>
+<th>Category</th>
+</tr>
+
+<tr class="section"><td colspan="5">qsirecon-DIPYDKI</td></tr>
+
+<tr class="mean"><td>DKI</td><td><code>ad</code></td><td>Axial diffusivity</td><td>Full</td><td>Mean Diffusivity</td></tr>
+<tr class="kurtosis"><td>DKI</td><td><code>ak</code></td><td>Axial kurtosis</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+<tr class="aniso"><td>DKI</td><td><code>fa</code></td><td>Fractional anisotropy</td><td>Full</td><td>Diffusion Anisotropy</td></tr>
+<tr class="kurtosis"><td>DKI</td><td><code>kfa</code></td><td>Kurtosis fractional anisotropy</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+<tr class="mean"><td>DKI</td><td><code>md</code></td><td>Mean diffusivity</td><td>Full</td><td>Mean Diffusivity</td></tr>
+<tr class="kurtosis"><td>DKI</td><td><code>mk</code></td><td>Mean kurtosis</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+<tr class="kurtosis"><td>DKI</td><td><code>mkt</code></td><td>Mean kurtosis tensor</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+<tr class="mean"><td>DKI</td><td><code>rd</code></td><td>Radial diffusivity</td><td>Full</td><td>Mean Diffusivity</td></tr>
+<tr class="kurtosis"><td>DKI</td><td><code>rk</code></td><td>Radial kurtosis</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+
+<tr class="section"><td colspan="5">qsirecon-DSIStudio</td></tr>
+
+<tr class="aniso"><td>GQI</td><td><code>gfa</code></td><td>Generalized fractional anisotropy</td><td>Full</td><td>Diffusion Anisotropy</td></tr>
+<tr class="neutral"><td>GQI</td><td><code>iso</code></td><td>Isotropic diffusion</td><td>Full</td><td></td></tr>
+<tr class="aniso"><td>GQI</td><td><code>qa</code></td><td>Quantitative anisotropy</td><td>Full</td><td>Diffusion Anisotropy</td></tr>
+
+<tr class="mean"><td>Tensor</td><td><code>ad</code></td><td>Axial diffusivity (first eigenvalue) from a tensor fit</td><td>Inner</td><td>Mean Diffusivity</td></tr>
+<tr class="aniso"><td>Tensor</td><td><code>fa</code></td><td>Fractional anisotropy from a tensor fit</td><td>Inner</td><td>Diffusion Anisotropy</td></tr>
+<tr class="neutral"><td>Tensor</td><td><code>ha*</code></td><td>Helix angle from tensor fit</td><td>Inner</td><td></td></tr>
+<tr class="mean"><td>Tensor</td><td><code>md</code></td><td>Mean diffusivity from a tensor fit</td><td>Inner</td><td>Mean Diffusivity</td></tr>
+<tr class="mean"><td>Tensor</td><td><code>rd</code></td><td>Radial diffusivity from a tensor fit</td><td>Inner</td><td>Mean Diffusivity</td></tr>
+<tr class="mean"><td>Tensor</td><td><code>rd1</code></td><td>Lambda 2 (second eigenvalue) from a tensor fit</td><td>Inner</td><td>Mean Diffusivity</td></tr>
+<tr class="mean"><td>Tensor</td><td><code>rd2</code></td><td>Lambda 3 (third eigenvalue) from a tensor fit</td><td>Inner</td><td>Mean Diffusivity</td></tr>
+
+<tr class="neutral"><td>Tensor</td><td><code>txx*</code></td><td>Tensor fit txx</td><td>Inner</td><td></td></tr>
+<tr class="neutral"><td>Tensor</td><td><code>txy*</code></td><td>Tensor fit txy</td><td>Inner</td><td></td></tr>
+<tr class="neutral"><td>Tensor</td><td><code>txz*</code></td><td>Tensor fit txz</td><td>Inner</td><td></td></tr>
+<tr class="neutral"><td>Tensor</td><td><code>tyy*</code></td><td>Tensor fit tyy</td><td>Inner</td><td></td></tr>
+<tr class="neutral"><td>Tensor</td><td><code>tyz*</code></td><td>Tensor fit tyz</td><td>Inner</td><td></td></tr>
+<tr class="neutral"><td>Tensor</td><td><code>tzz*</code></td><td>Tensor fit tzz</td><td>Inner</td><td></td></tr>
+
+<tr class="section"><td colspan="5">qsirecon-TORTOISE_model-MAPMRI</td></tr>
+
+<tr class="kurtosis"><td>MAPMRI</td><td><code>ng</code></td><td>Non-Gaussianity</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+<tr class="kurtosis"><td>MAPMRI</td><td><code>ngpar</code></td><td>Non-Gaussianity parallel</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+<tr class="kurtosis"><td>MAPMRI</td><td><code>ngperp</code></td><td>Non-Gaussianity perpendicular</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+<tr class="kurtosis"><td>MAPMRI</td><td><code>pa</code></td><td>Propagator anisotropy</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+<tr class="kurtosis"><td>MAPMRI</td><td><code>path</code></td><td>Propagator anisotropy (θ)</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+
+<tr class="mean"><td>MAPMRI</td><td><code>rtap</code></td><td>Return to axis probability</td><td>Full</td><td>Mean Diffusivity</td></tr>
+<tr class="mean"><td>MAPMRI</td><td><code>rtop</code></td><td>Return to origin probability</td><td>Full</td><td>Mean Diffusivity</td></tr>
+<tr class="mean"><td>MAPMRI</td><td><code>rtpp</code></td><td>Return to plane probability</td><td>Full</td><td>Mean Diffusivity</td></tr>
+
+<tr class="mean"><td>Tensor</td><td><code>ad</code></td><td>Axial diffusivity</td><td>Inner</td><td>Mean Diffusivity</td></tr>
+<tr class="neutral"><td>Tensor</td><td><code>am*</code></td><td>A0 from a tensor fit</td><td>Inner</td><td></td></tr>
+<tr class="aniso"><td>Tensor</td><td><code>fa</code></td><td>Fractional anisotropy from a tensor fit</td><td>Inner</td><td>Diffusion Anisotropy</td></tr>
+<tr class="aniso"><td>Tensor</td><td><code>li</code></td><td>Lattice index</td><td>Inner</td><td>Diffusion Anisotropy</td></tr>
+<tr class="mean"><td>Tensor</td><td><code>rd</code></td><td>Radial diffusivity from a tensor fit</td><td>Inner</td><td>Mean Diffusivity</td></tr>
+
+<tr class="section"><td colspan="5">qsirecon-wmNODDI</td></tr>
+
+<tr class="kurtosis"><td>NODDI</td><td><code>icvf</code></td><td>Intracellular volume fraction</td><td>Full</td><td>Diffusion Kurtosis</td></tr>
+<tr class="mean"><td>NODDI</td><td><code>isovf</code></td><td>Isotropic volume fraction</td><td>Full</td><td>Mean Diffusivity</td></tr>
+<tr class="aniso"><td>NODDI</td><td><code>od</code></td><td>Orientation dispersion index</td><td>Full</td><td>Diffusion Anisotropy</td></tr>
+
+</table>
+
+</body>
+</html>

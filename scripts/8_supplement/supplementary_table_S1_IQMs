@@ -1,0 +1,86 @@
+from textwrap import dedent
+
+sections = {
+    "Head motion metrics": [
+        ("Mean Framewise Displacement", "mean_fd", "Lower value (less head motion)"),
+        ("Maximum Framewise Displacement", "max_fd", "Lower value (less extreme motion)"),
+        ("Maximum Translation", "max_translation", "Lower value (less motion)"),
+        ("Maximum Rotation", "max_rotation", "Lower value (less rotation)"),
+        ("Maximum Relative Translation", "max_rel_translation", "Lower value (less motion variability)"),
+        ("Maximum Relative Rotation", "max_rel_rotation", "Lower value (less rotation variability)"),
+    ],
+
+    "Registration quality": [
+        ("T1–dMRI Dice Distance", "t1_dice_distance", "Lower value (better spatial overlap)")
+    ],
+
+    "Signal-to-noise / contrast metrics": [
+        ("Mean tSNR (b = 0)", "CNR0_mean", "Higher value (better contrast)"),
+        ("Mean CNR (Shell 1–4)", "CNR[1–4]_mean", "Higher value"),
+        ("Median tSNR (b = 0)", "CNR0_median", "Higher value"),
+        ("Median CNR (Shell 1–4)", "CNR[1–4]_median", "Higher value"),
+    ],
+
+    "Signal stability metrics": [
+        ("tSNR SD (b = 0)", "CNR0_standard_deviation", "Lower value (more consistent contrast)"),
+        ("CNR SD (Shell 1–4)", "CNR[1–4]_standard_deviation", "Lower value"),
+    ],
+
+    "Diffusion similarity metrics": [
+        ("Neighboring dMRI Correlation", "[raw|t1|t1post]_neighbor_corr", "Closer to 1 (higher neighboring dMRI similarity)"),
+        ("Masked Neighboring dMRI Correlation", "[raw|t1|t1post]_masked_neighbor_corr", "Closer to 1"),
+        ("dMRI Contrast", "[raw|t1|t1post]_dwi_contrast", "Higher value"),
+    ],
+
+    "Fiber orientation consistency": [
+        ("Fiber Coherence Index", "[raw|t1|t1post]_coherence_index", "Higher value (better gradient validity)"),
+        ("Fiber Incoherence Index", "[raw|t1|t1post]_incoherence_index", "Lower value (better gradient validity)"),
+    ],
+
+    "Slice artifact metrics": [
+        ("Number of Bad Slices", "[raw|t1|t1post]_num_bad_slices", "Lower value (fewer slices with artifacts)")
+    ]
+}
+
+html = """
+<table style="border-collapse:collapse;font-family:Arial;font-size:11pt;width:100%;">
+<tr>
+<th style="border-bottom:2px solid black;text-align:left;padding:6px;">IQM</th>
+<th style="border-bottom:2px solid black;text-align:left;padding:6px;">QSIPrep Variable Name</th>
+<th style="border-bottom:2px solid black;text-align:left;padding:6px;">Higher Quality Indication</th>
+</tr>
+"""
+
+for section, rows in sections.items():
+    html += f"""
+<tr>
+<td colspan="3" style="padding-top:10px;font-weight:bold;border-bottom:1px solid #999;">
+{section}
+</td>
+</tr>
+"""
+    for name, var, quality in rows:
+        html += f"""
+<tr>
+<td style="padding:4px;">{name}</td>
+<td style="padding:4px;font-family:monospace;">{var}</td>
+<td style="padding:4px;">{quality}</td>
+</tr>
+"""
+
+html += "</table>"
+
+caption = dedent("""
+<b>Supplementary Table X. Diffusion MRI quality metrics (IQMs) derived from QSIPrep.</b>
+Metrics summarize motion, signal quality, diffusion consistency, fiber orientation validity,
+and slice artifacts. Variable names correspond to QSIPrep outputs. Prefix notation
+[raw|t1|t1post]_ indicates the processing stage at which the metric was computed
+(raw diffusion data, preprocessed data prior to B1 bias correction, or preprocessed data
+after B1 bias correction).
+""")
+
+print(caption)
+print(html)
+
+with open("supplementary_table.html", "w") as f:
+    f.write(caption + html)

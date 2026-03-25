@@ -1,0 +1,127 @@
+import pandas as pd
+
+# ---------------------------
+# Load data
+# ---------------------------
+
+path = "/Users/stevenmeisler/Documents/Penn/abcc-qsiprep/meisler_abcd_dmri/data/harmonized_data/merged_data_meisler_analyses_harmonized.parquet"
+
+df = pd.read_parquet(path)
+
+# ---------------------------
+# Parse batch_device_software
+# ---------------------------
+
+# split only on FIRST dot
+split1 = df["batch_device_software"].str.split(".", n=1, expand=True)
+
+df["Device Serial Number (anonymized)"] = split1[0]
+
+# split only on FIRST underscore
+split2 = split1[1].str.split("_", n=1, expand=True)
+
+df["Scanner Vendor"] = split2[0]
+df["Major Software Version"] = split2[1]
+
+# ---------------------------
+# Clean scanner model names
+# ---------------------------
+
+df["Model"] = df["scanner_model"]
+
+df["Model"] = df["Model"].replace({
+    "Prisma_fit": "Prisma Fit"
+})
+
+df["Model"] = df["Model"].str.replace(
+    "DISCOVERY", "Discovery", regex=False
+)
+
+# ---------------------------
+# Fix site sorting (1,2,3 not 1,10,11)
+# ---------------------------
+
+df["Site"] = pd.to_numeric(df["site"], errors="coerce")
+
+# ---------------------------
+# Build harmonization table
+# ---------------------------
+
+table = (
+    df.groupby([
+        "Site",
+        "Scanner Vendor",
+        "Model",
+        "Device Serial Number (anonymized)",
+        "Major Software Version"
+    ])
+    .size()
+    .reset_index(name="Number of Scans")
+)
+
+# sort properly
+table = table.sort_values(["Site", "Scanner Vendor", "Model"])
+
+# ---------------------------
+# Convert to fancy HTML
+# ---------------------------
+
+html_table = table.to_html(
+    index=False,
+    border=0,
+    classes="scanner-table",
+    justify="left"
+)
+
+html = f"""
+<html>
+<head>
+<style>
+
+body {{
+    font-family: Arial, sans-serif;
+}}
+
+table.scanner-table {{
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 11pt;
+}}
+
+.scanner-table th {{
+    border-bottom: 2px solid black;
+    padding: 6px;
+    text-align: left;
+}}
+
+.scanner-table td {{
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}}
+
+</style>
+</head>
+
+<body>
+
+<p><b>Supplementary Table X. Harmonization batches used in diffusion MRI analyses.</b>
+Each batch corresponds to a unique combination of site, scanner vendor, scanner model,
+device serial number (anonymized), and major software version derived from the
+<code>batch_device_software</code> identifier. The number of scans per batch is reported.</p>
+
+{html_table}
+
+</body>
+</html>
+"""
+
+# ---------------------------
+# Save HTML
+# ---------------------------
+
+output = "harmonization_batches_table.html"
+
+with open(output, "w") as f:
+    f.write(html)
+
+print("Saved table to:", output)
