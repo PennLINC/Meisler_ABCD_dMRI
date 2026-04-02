@@ -23,7 +23,12 @@ All figure notebooks use the `r` kernel.
 Option A: open and run interactively (recommended):
 
 ```bash
-jupyter lab "${PROJECT_ROOT}/scripts/6_figures"
+cd "${PROJECT_ROOT}"
+"${PY_ENV}/bin/jupyter" lab "scripts/6_figures"
+```
+
+```{note}
+Launch Jupyter from `${PROJECT_ROOT}` so notebook `config.json` fallback resolution (searching upward from working directory) works when `CONFIG_PATH` is unset.
 ```
 
 Option B: execute from CLI (headless):

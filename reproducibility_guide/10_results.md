@@ -13,7 +13,12 @@ PY_ENV=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["python
 Open and run interactively (recommended):
 
 ```bash
-"${PY_ENV}/bin/jupyter" lab "${PROJECT_ROOT}/scripts/7_results"
+cd "${PROJECT_ROOT}"
+"${PY_ENV}/bin/jupyter" lab "scripts/7_results"
+```
+
+```{note}
+Launch Jupyter from `${PROJECT_ROOT}` so notebook `config.json` fallback resolution (searching upward from working directory) works when `CONFIG_PATH` is unset.
 ```
 
 ```{note}

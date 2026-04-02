@@ -27,7 +27,12 @@ In practice, this usually means running the modeling scripts in Chapter 8 withou
 Open and run interactively:
 
 ```bash
-jupyter lab "${PROJECT_ROOT}/scripts/8_supplement"
+cd "${PROJECT_ROOT}"
+"${PY_ENV}/bin/jupyter" lab "scripts/8_supplement"
+```
+
+```{note}
+Launch Jupyter from `${PROJECT_ROOT}` so notebook `config.json` fallback resolution (searching upward from working directory) works when `CONFIG_PATH` is unset.
 ```
 
 Or execute from CLI:
@@ -60,4 +65,3 @@ Outputs are written to `${PROJECT_ROOT}/figures/Supplement/FigureS*/`.
 - `supplementary_table_S1_IQMs`: Python script that generates an HTML IQM definitions table.
 - `supplementary_table_S2_microstructure.html`: static HTML table of microstructural metrics and categories.
 - `supplementary_table_S3_batches`: Python script that generates an HTML harmonization-batch table from harmonized data.
-

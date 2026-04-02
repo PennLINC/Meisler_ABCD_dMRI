@@ -9,10 +9,15 @@ This project is designed to be portable across machines by centralizing machine-
 
 If you are the lab reproducibility, you will be replicating the project on Respublica at `/mnt/isilon/bgdlab_hbcd/projects/meisler_abcd_replication`.
 ```{note}
-I have already made this directory for the lab replicator and updated the `config.json` accordingly.
+I have already made this directory for the lab replicator and provided an `config.json` accordingly.
 ```
 
-Scripts expect the environment variable `CONFIG_PATH` to point to this file:
+### Clone the repository:
+In `/mnt/isilon/bgdlab_hbcd/projects/meisler_abcd_replication`, with a GitHub SSH key enabled, run:
+```
+git clone git@github.com:PennLINC/Meisler_ABCD_dMRI.git
+```
+You will see there is an example `config.json` in the cloned repository. You can copy the one I made for you to overwrite it. Regardless, scripts expect the environment variable `CONFIG_PATH` to point to a proper config file:
 ```bash
 export CONFIG_PATH="/absolute/path/to/your/config.json"
 ```
@@ -23,7 +28,7 @@ echo 'export CONFIG_PATH="/absolute/path/to/config.json"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-Update these fields in `config.json` for your system:
+Update these fields in `config.json` as necessary for your system:
 - `project_root`: absolute path to this repository
 - `lasso_root`: absolute path to your LASSO/ABCD input data directory **(only necessary if re-munging data, which shouldn't be the case given LASSO will be making the QSIRecon data official tabular data)**
 - `r_env`: Path to your R envionment (should contain `bin/Rscript`). **Lab replicators can feel free to use mine, otherwise make a new one (see below)**
@@ -83,4 +88,21 @@ Install the R kernel for Jupyter:
 ```bash
 "${R_ENV}/bin/Rscript" -e "IRkernel::installspec(name='r', displayname='R')"
 "${PY_ENV}/bin/jupyter" kernelspec list
+```
+
+## Launching Jupyter so `config.json` is found
+
+Figure/supplement notebooks first check `CONFIG_PATH`, and if it is unset they now fall back to searching upward from the current working directory for `config.json`.
+
+To make that fallback reliable, launch Jupyter from the project root:
+
+```bash
+cd "${PROJECT_ROOT}"
+"${PY_ENV}/bin/jupyter" lab
+```
+
+If you prefer, you can still set:
+
+```bash
+export CONFIG_PATH="${PROJECT_ROOT}/config.json"
 ```
