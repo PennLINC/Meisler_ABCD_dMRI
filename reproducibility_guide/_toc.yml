@@ -1,0 +1,18 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: 0_basic_info
+chapters:
+- file: 1_intro
+- file: 2_preprocessing
+- file: 3_postprocessing
+- file: 4_data_munging
+- file: 5_manual_rating
+- file: 6_replication_setup
+- file: 7_harmonization
+- file: 8_modeling
+- file: 9_figures
+- file: 10_results
+- file: 11_supplement
+- file: bibliography

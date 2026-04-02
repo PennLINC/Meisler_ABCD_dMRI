@@ -1,0 +1,18 @@
+{
+    "t2w": {
+        "datatype": "anat",
+        "reconstruction": [
+            "normalized",
+            "Normalized"
+        ],
+        "suffix": "T2w"
+    },
+    "t1w": {
+        "datatype": "anat",
+        "reconstruction": [
+            "normalized",
+            "Normalized"
+        ],
+        "suffix": "T1w"
+    }
+}
