@@ -1,0 +1,53 @@
+name: Deploy Reproducibility Guide
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "reproducibility_guide/**"
+      - ".github/workflows/deploy_reproducibility_guide.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Jupyter Book
+        run: python -m pip install --upgrade pip jupyter-book
+
+      - name: Build book
+        run: jupyter-book build reproducibility_guide
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: reproducibility_guide/_build/html
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
