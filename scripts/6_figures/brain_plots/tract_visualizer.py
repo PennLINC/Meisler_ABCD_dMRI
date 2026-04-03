@@ -2275,7 +2275,6 @@ class TractVisualizer:
         colorbar_title: Optional[str] = None,
     ) -> None:
         """Process one tract in iterative mode from the main plotting loop."""
-
         print(f"Processing tract {i+1}/{len(all_matched_tracts)}: {tract}")
 
         # Find the numbered file for this tract

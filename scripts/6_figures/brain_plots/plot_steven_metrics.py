@@ -197,8 +197,8 @@ def resolve_paths(args: argparse.Namespace) -> dict:
         else str(
             (
                 project_root / "figures" / "brain_plots" / "steven_plots"
-            ).resolve()
-        )
+            ).resolve()  # noqa: E501
+        )  # noqa: E501
     )
 
     dsi_studio_path = detect_dsi_studio(config, args.dsi_studio)
@@ -329,9 +329,10 @@ def main() -> int:
             continue
         out_dir = base_output / col
         out_dir.mkdir(parents=True, exist_ok=True)
-        print(
-            f"Plotting {col} ({color_scheme}, range [{vmin}, "
-            f"{vmax}]) -> {out_dir}"
+        range_label = f"[{vmin}, {vmax}]"
+        print(  # noqa: E501
+            f"Plotting {col} ({color_scheme}, range {range_label}) -> "
+            f"{out_dir}"  # noqa: E501
         )
         viz.visualize_tracts(
             tract_df=df,
@@ -359,7 +360,7 @@ def main() -> int:
             _, _, sub = viz._find_tract_file(tract_name)
             return sub in ("left_hem", "bilateral")
 
-        tract_list = [
+        tract_list = [  # noqa: E501
             t for t in cat_df["bundle"].tolist() if _is_left_or_bilateral(t)
         ]
         if not tract_list:
