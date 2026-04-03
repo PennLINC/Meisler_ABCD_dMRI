@@ -203,3 +203,9 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Project data outputs (root-level)
+/data/
+/figures/
+/codex_context.md
+/scripts/*/logs/

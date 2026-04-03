@@ -1,0 +1,171 @@
+
+<b>Supplementary Table X. Diffusion MRI quality metrics (IQMs) derived from QSIPrep.</b>
+Metrics summarize motion, signal quality, diffusion consistency, fiber orientation validity,
+and slice artifacts. Variable names correspond to QSIPrep outputs. Prefix notation
+[raw|t1|t1post]_ indicates the processing stage at which the metric was computed
+(raw diffusion data, preprocessed data prior to B1 bias correction, or preprocessed data
+after B1 bias correction).
+
+<table style="border-collapse:collapse;font-family:Arial;font-size:11pt;width:100%;">
+<tr>
+<th style="border-bottom:2px solid black;text-align:left;padding:6px;">IQM</th>
+<th style="border-bottom:2px solid black;text-align:left;padding:6px;">QSIPrep Variable Name</th>
+<th style="border-bottom:2px solid black;text-align:left;padding:6px;">Higher Quality Indication</th>
+</tr>
+
+<tr>
+<td colspan="3" style="padding-top:10px;font-weight:bold;border-bottom:1px solid #999;">
+Head motion metrics
+</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Mean Framewise Displacement</td>
+<td style="padding:4px;font-family:monospace;">mean_fd</td>
+<td style="padding:4px;">Lower value (less head motion)</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Maximum Framewise Displacement</td>
+<td style="padding:4px;font-family:monospace;">max_fd</td>
+<td style="padding:4px;">Lower value (less extreme motion)</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Maximum Translation</td>
+<td style="padding:4px;font-family:monospace;">max_translation</td>
+<td style="padding:4px;">Lower value (less motion)</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Maximum Rotation</td>
+<td style="padding:4px;font-family:monospace;">max_rotation</td>
+<td style="padding:4px;">Lower value (less rotation)</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Maximum Relative Translation</td>
+<td style="padding:4px;font-family:monospace;">max_rel_translation</td>
+<td style="padding:4px;">Lower value (less motion variability)</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Maximum Relative Rotation</td>
+<td style="padding:4px;font-family:monospace;">max_rel_rotation</td>
+<td style="padding:4px;">Lower value (less rotation variability)</td>
+</tr>
+
+<tr>
+<td colspan="3" style="padding-top:10px;font-weight:bold;border-bottom:1px solid #999;">
+Registration quality
+</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">T1–dMRI Dice Coefficient</td>
+<td style="padding:4px;font-family:monospace;">t1_dice_distance</td>
+<td style="padding:4px;">Lower value (better spatial overlap)</td>
+</tr>
+
+<tr>
+<td colspan="3" style="padding-top:10px;font-weight:bold;border-bottom:1px solid #999;">
+Signal- and contrast-to-noise metrics
+</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Mean tSNR (b = 0)</td>
+<td style="padding:4px;font-family:monospace;">CNR0_mean</td>
+<td style="padding:4px;">Higher value (better contrast)</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Mean CNR (Shell 1–4)</td>
+<td style="padding:4px;font-family:monospace;">CNR[1–4]_mean</td>
+<td style="padding:4px;">Higher value</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Median tSNR (b = 0)</td>
+<td style="padding:4px;font-family:monospace;">CNR0_median</td>
+<td style="padding:4px;">Higher value</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Median CNR (Shell 1–4)</td>
+<td style="padding:4px;font-family:monospace;">CNR[1–4]_median</td>
+<td style="padding:4px;">Higher value</td>
+</tr>
+
+<tr>
+<td colspan="3" style="padding-top:10px;font-weight:bold;border-bottom:1px solid #999;">
+Signal stability metrics
+</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">tSNR SD (b = 0)</td>
+<td style="padding:4px;font-family:monospace;">CNR0_standard_deviation</td>
+<td style="padding:4px;">Lower value (more consistent contrast)</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">CNR SD (Shell 1–4)</td>
+<td style="padding:4px;font-family:monospace;">CNR[1–4]_standard_deviation</td>
+<td style="padding:4px;">Lower value</td>
+</tr>
+
+<tr>
+<td colspan="3" style="padding-top:10px;font-weight:bold;border-bottom:1px solid #999;">
+q-Space similarity metrics
+</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Neighboring dMRI Correlation</td>
+<td style="padding:4px;font-family:monospace;">[raw|t1|t1post]_neighbor_corr</td>
+<td style="padding:4px;">Closer to 1 (higher neighboring dMRI similarity)</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Masked Neighboring dMRI Correlation</td>
+<td style="padding:4px;font-family:monospace;">[raw|t1|t1post]_masked_neighbor_corr</td>
+<td style="padding:4px;">Closer to 1</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">dMRI Contrast</td>
+<td style="padding:4px;font-family:monospace;">[raw|t1|t1post]_dwi_contrast</td>
+<td style="padding:4px;">Higher value</td>
+</tr>
+
+<tr>
+<td colspan="3" style="padding-top:10px;font-weight:bold;border-bottom:1px solid #999;">
+Fiber orientation coherence
+</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Fiber Coherence Index</td>
+<td style="padding:4px;font-family:monospace;">[raw|t1|t1post]_coherence_index</td>
+<td style="padding:4px;">Higher value (better gradient validity)</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Fiber Incoherence Index</td>
+<td style="padding:4px;font-family:monospace;">[raw|t1|t1post]_incoherence_index</td>
+<td style="padding:4px;">Lower value (better gradient validity)</td>
+</tr>
+
+<tr>
+<td colspan="3" style="padding-top:10px;font-weight:bold;border-bottom:1px solid #999;">
+Slice artifact metrics
+</td>
+</tr>
+
+<tr>
+<td style="padding:4px;">Number of Bad Slices</td>
+<td style="padding:4px;font-family:monospace;">[raw|t1|t1post]_num_bad_slices</td>
+<td style="padding:4px;">Lower value (fewer slices with artifacts)</td>
+</tr>
+</table>
