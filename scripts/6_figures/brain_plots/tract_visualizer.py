@@ -1,29 +1,26 @@
 #!/usr/bin/env python3
-# ------------------------------------------------------------------------------------------------
-# --- Tract Visualizer for DSI Studio ---
-# ------------------------------------------------------------------------------------------------
-# Inputs: list of tracts, color scheme, tract abbreviations
-# Outputs: colored tract images obtained using DSI Studio
-# ------------------------------------------------------------------------------------------------
+"""Tract visualizer for DSI Studio bundle image generation."""
 
-import os
-import pandas as pd
-import numpy as np
-import subprocess
 import json
-from pathlib import Path
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
-from typing import List, Dict, Optional, Union, Tuple
-import sys
+import os
 import re
 import shutil
+import subprocess
+import sys
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple, Union
+
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from PIL import Image
 
 # Try to import tm_utils for custom colormaps
 try:
     sys.path.append(os.path.join(os.path.dirname(__file__)))
     import tm_utils
+
     # Get custom colormaps
     _, _, _, _, _, fds_cmap = tm_utils.make_colormaps()
     HAS_TM_UTILS = True
@@ -31,6 +28,7 @@ except ImportError:
     print("Warning: Could not import tm_utils. fds_cmap will not be available.")
     fds_cmap = None
     HAS_TM_UTILS = False
+
 
 class TractVisualizer:
     """
@@ -2215,80 +2213,163 @@ class TractVisualizer:
         # Create grid from the view images
         if len(view_images) == 2:
             grid_output = f'{self.output_dir}/{output_name}_{base_name}_{view}.jpg'
-            self._create_single_view_grid(view_images, grid_output, orientation=grid_orientation)
-            
+            self._create_single_view_grid(
+                view_images,
+                grid_output,
+                orientation=grid_orientation,
+            )
+
             # Add colorbar if requested
             if colorbar:
-                colorbar_values = full_dataset_values if full_dataset_values else values
-                self._add_colorbar_to_image(grid_output, group_tracts_sorted, color_scheme, colorbar_values,
-                                          converted_color_dict, has_single_color, has_values_column, values_column,
-                                          has_color_column, color_column, full_dataset_colors, colorbar_title)
-            
+                colorbar_values = (
+                    full_dataset_values if full_dataset_values else values
+                )
+                self._add_colorbar_to_image(
+                    grid_output,
+                    group_tracts_sorted,
+                    color_scheme,
+                    colorbar_values,
+                    converted_color_dict,
+                    has_single_color,
+                    has_values_column,
+                    values_column,
+                    has_color_column,
+                    color_column,
+                    full_dataset_colors,
+                    colorbar_title,
+                )
+
             # Clean up individual view images
             for img_path in view_images:
                 if os.path.exists(img_path):
                     os.remove(img_path)
-            
-            print(f"Created {view} {grid_orientation} grid for {base_name}: {grid_output}")
 
-    def _process_single_tract_iterative(self, i: int, tract: str, all_matched_tracts: List[str],
-                                       tract_to_numbered_file: Dict[str, str],
-                                       color_scheme: str, values: Optional[List[float]], 
-                                       converted_color_dict: Optional[Dict[str, tuple]],
-                                       output_name: str, view: str, grid_orientation: Optional[str],
-                                       colorbar: bool, has_single_color: bool,
-                                       has_values_column: bool, values_column: Optional[str],
-                                       has_color_column: bool, color_column: Optional[str],
-                                       full_dataset_values: Optional[List[float]],
-                                       full_dataset_colors: Optional[Dict[str, tuple]],
-                                       keep_csv: bool, keep_color_files: bool,
-                                       value_range: Optional[Tuple[float, float]] = None,
-                                       colorbar_title: Optional[str] = None) -> None:
-        """Process a single tract in iterative mode (extracted from main loop for reuse)."""
-        
+            print(
+                f"Created {view} {grid_orientation} grid for "
+                f"{base_name}: {grid_output}"
+            )
+
+    def _process_single_tract_iterative(
+        self,
+        i: int,
+        tract: str,
+        all_matched_tracts: List[str],
+        tract_to_numbered_file: Dict[str, str],
+        color_scheme: str,
+        values: Optional[List[float]],
+        converted_color_dict: Optional[Dict[str, tuple]],
+        output_name: str,
+        view: str,
+        grid_orientation: Optional[str],
+        colorbar: bool,
+        has_single_color: bool,
+        has_values_column: bool,
+        values_column: Optional[str],
+        has_color_column: bool,
+        color_column: Optional[str],
+        full_dataset_values: Optional[List[float]],
+        full_dataset_colors: Optional[Dict[str, tuple]],
+        keep_csv: bool,
+        keep_color_files: bool,
+        value_range: Optional[Tuple[float, float]] = None,
+        colorbar_title: Optional[str] = None,
+    ) -> None:
+        """Process one tract in iterative mode from the main plotting loop."""
+
         print(f"Processing tract {i+1}/{len(all_matched_tracts)}: {tract}")
-        
+
         # Find the numbered file for this tract
         if tract not in tract_to_numbered_file:
             print(f"Warning: Could not find numbered file for tract '{tract}'")
             return
-        
+
         numbered_tract_file = tract_to_numbered_file[tract]
-        
+
         # Create color file for this single tract
-        color_file = f'{self.output_dir}/{output_name}_{tract}_colors.txt'
-        
+        color_file = f"{self.output_dir}/{output_name}_{tract}_colors.txt"
+
         # Get the color value for this specific tract
         if converted_color_dict:
-            self._create_color_file([tract], color_file, color_scheme, None, converted_color_dict)
+            self._create_color_file(
+                [tract], color_file, color_scheme, None, converted_color_dict
+            )
         else:
             if values is not None and i < len(values):
                 tract_values = [values[i]]
             else:
                 tract_values = [i / max(1, len(all_matched_tracts) - 1)]
-            self._create_color_file([tract], color_file, color_scheme, tract_values, value_range=value_range)
-        
+            self._create_color_file(
+                [tract],
+                color_file,
+                color_scheme,
+                tract_values,
+                value_range=value_range,
+            )
+
         # Check if we need to create a grid or single view
         if grid_orientation is not None:
-            final_image = self._create_iterative_tract_grid(tract, numbered_tract_file, color_file, 
-                                            output_name, grid_orientation, keep_csv, keep_color_files, view)
-            
+            final_image = self._create_iterative_tract_grid(
+                tract,
+                numbered_tract_file,
+                color_file,
+                output_name,
+                grid_orientation,
+                keep_csv,
+                keep_color_files,
+                view,
+            )
+
             if colorbar and final_image:
-                colorbar_values = full_dataset_values if full_dataset_values else ([values[i]] if values else None)
-                self._add_colorbar_to_image(final_image, [tract], color_scheme, 
-                                          colorbar_values, converted_color_dict,
-                                          has_single_color, has_values_column, values_column,
-                                          has_color_column, color_column, full_dataset_colors, colorbar_title)
+                colorbar_values = (
+                    full_dataset_values
+                    if full_dataset_values
+                    else ([values[i]] if values else None)
+                )
+                self._add_colorbar_to_image(
+                    final_image,
+                    [tract],
+                    color_scheme,
+                    colorbar_values,
+                    converted_color_dict,
+                    has_single_color,
+                    has_values_column,
+                    values_column,
+                    has_color_column,
+                    color_column,
+                    full_dataset_colors,
+                    colorbar_title,
+                )
         else:
-            final_image = self._create_single_tract_view(tract, numbered_tract_file, color_file, 
-                                         output_name, view, keep_csv, keep_color_files)
-            
+            final_image = self._create_single_tract_view(
+                tract,
+                numbered_tract_file,
+                color_file,
+                output_name,
+                view,
+                keep_csv,
+                keep_color_files,
+            )
+
             if colorbar and final_image:
-                colorbar_values = full_dataset_values if full_dataset_values else ([values[i]] if values else None)
-                self._add_colorbar_to_image(final_image, [tract], color_scheme,
-                                          colorbar_values, converted_color_dict,
-                                          has_single_color, has_values_column, values_column,
-                                          has_color_column, color_column, full_dataset_colors, colorbar_title)
+                colorbar_values = (
+                    full_dataset_values
+                    if full_dataset_values
+                    else ([values[i]] if values else None)
+                )
+                self._add_colorbar_to_image(
+                    final_image,
+                    [tract],
+                    color_scheme,
+                    colorbar_values,
+                    converted_color_dict,
+                    has_single_color,
+                    has_values_column,
+                    values_column,
+                    has_color_column,
+                    color_column,
+                    full_dataset_colors,
+                    colorbar_title,
+                )
 
     # ------------------------------------------------------------
     # DSI Studio individual tract view

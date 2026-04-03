@@ -1,10 +1,29 @@
 import pandas as pd
+import json
+import os
+from pathlib import Path
 
 # ---------------------------
 # Load data
 # ---------------------------
 
-path = "/Users/stevenmeisler/Documents/Penn/abcc-qsiprep/meisler_abcd_dmri/data/harmonized_data/merged_data_meisler_analyses_harmonized.parquet"
+config_path = os.getenv("CONFIG_PATH", "").strip()
+if not config_path:
+    raise RuntimeError(
+        "CONFIG_PATH is not set. Export CONFIG_PATH=/path/to/config.json before running."
+    )
+
+config_file = Path(config_path).expanduser()
+if not config_file.exists():
+    raise FileNotFoundError(f"CONFIG_PATH does not exist: {config_file}")
+
+with config_file.open("r") as f:
+    config = json.load(f)
+
+project_root = Path(config["project_root"]).expanduser()
+path = project_root / "data" / "harmonized_data" / "merged_data_meisler_analyses_harmonized.parquet"
+if not path.exists():
+    raise FileNotFoundError(f"Missing harmonized parquet: {path}")
 
 df = pd.read_parquet(path)
 

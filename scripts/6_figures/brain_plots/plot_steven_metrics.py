@@ -6,7 +6,8 @@ Portable path behavior:
 - Resolves project_root from config.json (same pattern as R scripts).
 - Reads CSV produced by build_bundle_statistics_csv.R by default:
   {project_root}/data/bundle_statistics.csv
-- Supports CLI/env overrides for config, csv, trk_dir, fib_file, output_dir, dsi_studio.
+- Supports CLI/env overrides for config, csv, trk_dir, fib_file,
+  output_dir, dsi_studio.
 """
 
 from __future__ import annotations
@@ -15,15 +16,12 @@ import argparse
 import json
 import os
 import shutil
-import sys
 from pathlib import Path
 
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import pandas as pd
-
 from tract_visualizer import TractVisualizer
-
 
 # Register custom and seaborn colormaps for effect plots
 try:
@@ -44,9 +42,19 @@ if "steven_quality" not in plt.colormaps():
 
 # Effect columns: column name -> (colorbar title, color_scheme, vmin, vmax)
 EFFECT_COLUMNS = {
-    # "age_effect_no_quality_NODDI_icvf": ("Age effect, no quality included (NODDI ICVF)", "inferno", 0, 0.52),
+    # "age_effect_no_quality_NODDI_icvf": (
+    #     "Age effect, no quality included (NODDI ICVF)",
+    #     "inferno",
+    #     0,
+    #     0.52,
+    # ),
     "batch_effect_DKI_mkt": ("Batch effect (DKI MKT)", "mako", 0, 0.698),
-    # "quality_effect_contrast_GQI_fa": ("Quality effect (GQI FA)", "steven_quality", 0, 0.138),
+    # "quality_effect_contrast_GQI_fa": (
+    #     "Quality effect (GQI FA)",
+    #     "steven_quality",
+    #     0,
+    #     0.138,
+    # ),
 }
 
 # Bundle category colors (R bundle_colors -> Python)
@@ -60,6 +68,7 @@ BUNDLE_CATEGORY_COLORS = {
 
 
 def find_config_path(cli_config: str | None) -> Path:
+    """Resolve `config.json` using CLI, env, and relative fallback paths."""
     script_dir = Path(__file__).resolve().parent
     candidates = []
 
@@ -88,10 +97,13 @@ def find_config_path(cli_config: str | None) -> Path:
         if c_abs.exists():
             return c_abs
 
-    raise FileNotFoundError("Could not locate config.json. Set --config or CONFIG_PATH.")
+    raise FileNotFoundError(
+        "Could not locate config.json. Set --config or CONFIG_PATH."
+    )
 
 
 def detect_dsi_studio(config: dict, cli_dsi: str | None) -> str | None:
+    """Resolve a DSI Studio executable path from CLI, env, config, or PATH."""
     if cli_dsi:
         return cli_dsi
 
@@ -115,27 +127,53 @@ def detect_dsi_studio(config: dict, cli_dsi: str | None) -> str | None:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Plot Steven tract metrics with project-config paths.")
-    parser.add_argument("--config", default=None, help="Path to config.json (optional).")
-    parser.add_argument("--csv", default=None, help="Path to bundle_statistics.csv (optional).")
-    parser.add_argument("--trk-dir", default=None, help="Path to tract directory (optional).")
-    parser.add_argument("--fib-file", default=None, help="Path to .fib.gz file (optional).")
-    parser.add_argument("--output-dir", default=None, help="Output directory for generated plots.")
-    parser.add_argument("--dsi-studio", default=None, help="Path to dsi_studio executable.")
-    parser.add_argument("--abbreviations-file", default=None, help="Optional tract abbreviations file path.")
+    """Parse CLI arguments for plotting inputs and output configuration."""
+    parser = argparse.ArgumentParser(
+        description="Plot Steven tract metrics with project-config paths."
+    )
+    parser.add_argument(
+        "--config", default=None, help="Path to config.json (optional)."
+    )
+    parser.add_argument(
+        "--csv", default=None, help="Path to bundle_statistics.csv (optional)."
+    )
+    parser.add_argument(
+        "--trk-dir", default=None, help="Path to tract directory (optional)."
+    )
+    parser.add_argument(
+        "--fib-file", default=None, help="Path to .fib.gz file (optional)."
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=None,
+        help="Output directory for generated plots.",
+    )
+    parser.add_argument(
+        "--dsi-studio", default=None, help="Path to dsi_studio executable."
+    )
+    parser.add_argument(
+        "--abbreviations-file",
+        default=None,
+        help="Optional tract abbreviations file path.",
+    )
     return parser.parse_args()
 
 
 def resolve_paths(args: argparse.Namespace) -> dict:
+    """Build runtime paths from CLI arguments and project configuration."""
     config_path = find_config_path(args.config)
     config = json.loads(config_path.read_text())
 
     project_root = Path(config["project_root"]).expanduser().resolve()
 
-    csv_path = Path(args.csv).expanduser().resolve() if args.csv else project_root / "data" / "bundle_statistics.csv"
+    csv_path = (
+        Path(args.csv).expanduser().resolve()
+        if args.csv
+        else project_root / "data" / "bundle_statistics.csv"
+    )
 
-    # Prefer explicit arg, then common repository location from previous script version,
-    # then TractVisualizer defaults if not found.
+    # Prefer explicit arg, then common repository location from the
+    # previous script version, then TractVisualizer defaults if not found.
     trk_dir = None
     if args.trk_dir:
         trk_dir = str(Path(args.trk_dir).expanduser().resolve())
@@ -156,12 +194,20 @@ def resolve_paths(args: argparse.Namespace) -> dict:
     output_dir = (
         str(Path(args.output_dir).expanduser().resolve())
         if args.output_dir
-        else str((project_root / "figures" / "brain_plots" / "steven_plots").resolve())
+        else str(
+            (
+                project_root / "figures" / "brain_plots" / "steven_plots"
+            ).resolve()
+        )
     )
 
     dsi_studio_path = detect_dsi_studio(config, args.dsi_studio)
 
-    abbreviations_file = str(Path(args.abbreviations_file).expanduser().resolve()) if args.abbreviations_file else None
+    abbreviations_file = (
+        str(Path(args.abbreviations_file).expanduser().resolve())
+        if args.abbreviations_file
+        else None
+    )
 
     return {
         "config_path": str(config_path),
@@ -175,7 +221,14 @@ def resolve_paths(args: argparse.Namespace) -> dict:
     }
 
 
-def map_bundles_to_available(df: pd.DataFrame, available_tracts: list[str]) -> pd.DataFrame:
+def map_bundles_to_available(
+    df: pd.DataFrame, available_tracts: list[str]
+) -> pd.DataFrame:
+    """Map CSV bundle labels to available tract names.
+
+    Drop rows that do not match available tracts.
+    """
+
     def _map_bundle_name(bundle_name: str) -> str:
         if bundle_name in available_tracts:
             return bundle_name
@@ -183,7 +236,9 @@ def map_bundles_to_available(df: pd.DataFrame, available_tracts: list[str]) -> p
             (
                 t
                 for t in available_tracts
-                if t == bundle_name or t.endswith("." + bundle_name) or t.endswith(bundle_name)
+                if t == bundle_name
+                or t.endswith("." + bundle_name)
+                or t.endswith(bundle_name)
             ),
             bundle_name,
         )
@@ -195,6 +250,7 @@ def map_bundles_to_available(df: pd.DataFrame, available_tracts: list[str]) -> p
 
 
 def main() -> int:
+    """Load metrics, map tract names, and generate configured tract plots."""
     args = parse_args()
     paths = resolve_paths(args)
 
@@ -227,7 +283,8 @@ def main() -> int:
 
     if "dsi_studio_path" not in viz_kwargs:
         print(
-            "Warning: dsi_studio path not found via --dsi-studio, DSI_STUDIO_PATH, config.json, or PATH. "
+            "Warning: dsi_studio path not found via --dsi-studio, "
+            "DSI_STUDIO_PATH, config.json, or PATH. "
             "TractVisualizer will use its internal default."
         )
 
@@ -241,7 +298,10 @@ def main() -> int:
     available_tracts = viz.get_available_tracts()
 
     if not available_tracts:
-        raise SystemExit("No available tracts detected by TractVisualizer. Check trk_dir/abbreviations setup.")
+        raise SystemExit(
+            "No available tracts detected by TractVisualizer. "
+            "Check trk_dir/abbreviations setup."
+        )
 
     df = map_bundles_to_available(df, available_tracts)
     if df.empty:
@@ -259,12 +319,20 @@ def main() -> int:
     base_output = Path(paths["output_dir"])
 
     # 1) Effect plots: all_tracts
-    for col, (colorbar_title, color_scheme, vmin, vmax) in EFFECT_COLUMNS.items():
+    for col, (
+        colorbar_title,
+        color_scheme,
+        vmin,
+        vmax,
+    ) in EFFECT_COLUMNS.items():
         if col not in df.columns:
             continue
         out_dir = base_output / col
         out_dir.mkdir(parents=True, exist_ok=True)
-        print(f"Plotting {col} ({color_scheme}, range [{vmin}, {vmax}]) -> {out_dir}")
+        print(
+            f"Plotting {col} ({color_scheme}, range [{vmin}, "
+            f"{vmax}]) -> {out_dir}"
+        )
         viz.visualize_tracts(
             tract_df=df,
             tract_name_column="bundle",
@@ -291,12 +359,17 @@ def main() -> int:
             _, _, sub = viz._find_tract_file(tract_name)
             return sub in ("left_hem", "bilateral")
 
-        tract_list = [t for t in cat_df["bundle"].tolist() if _is_left_or_bilateral(t)]
+        tract_list = [
+            t for t in cat_df["bundle"].tolist() if _is_left_or_bilateral(t)
+        ]
         if not tract_list:
             continue
 
         cat_df = cat_df[cat_df["bundle"].isin(tract_list)].copy()
-        print(f"Category {cat}: grid of tracts (left + bilateral, n={len(tract_list)}) -> {category_dir}")
+        print(
+            f"Category {cat}: grid of tracts (left + bilateral, "
+            f"n={len(tract_list)}) -> {category_dir}"
+        )
         viz.visualize_tracts(
             tract_df=cat_df,
             tract_name_column="bundle",
