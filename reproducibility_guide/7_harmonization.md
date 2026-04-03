@@ -24,6 +24,17 @@ Key `config.json` field used by harmonization:
 
 ## How to submit harmonization
 
+Paper-focused submit (main-text 5 metrics only: `DKI_mkt`, `NODDI_icvf`, `MAPMRI_rtop`, `GQI_fa`, `GQI_md`):
+
+```bash
+export CONFIG_PATH="/absolute/path/to/your/config.json"
+PROJECT_ROOT=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["project_root"])' "$CONFIG_PATH")
+cd "${PROJECT_ROOT}/scripts/2_harmonize_data"
+sbatch --array=7,11,14,29,31 submit_harmonize_data.sh
+```
+
+Run everything (all configured microstructural metrics):
+
 ```bash
 export CONFIG_PATH="/absolute/path/to/your/config.json"
 PROJECT_ROOT=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["project_root"])' "$CONFIG_PATH")
@@ -35,6 +46,10 @@ sbatch submit_harmonize_data.sh
 
 ```{note}
 The array range should match the length of `microstructural_metrics` in `config.json`.
+```
+
+```{note}
+When launched via `sbatch`, logs are written under `scripts/2_harmonize_data/logs`.
 ```
 
 ## What `harmonize_data.R` does

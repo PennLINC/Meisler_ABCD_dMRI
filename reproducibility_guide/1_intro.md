@@ -10,13 +10,14 @@ Some of these steps are only meant to be replicated by PennLINC lab members, and
 Please note that access to the data release is limited to researchers with a valid ABCD/HBCD Data Use Certification (https://www.nbdc-datahub.org/).
 ```
 
-This guide _also_ acts as a data narrative, adding details and context that were not appropriate for the publication.
+This guide *also* acts as a data narrative, adding details and context that were not appropriate for the publication.
 
 ```{note}
 For the PennLINC Reproducibilibuddy: please start at the automated classifier QC step in the data munging chapter.
 ```
 
 ## Software
+
 Although you will not be reprocessing this data, note that we used the following software for processing the data:
 
 - [QSIPrep 0.21.4](https://qsiprep.readthedocs.io/en/latest/usage.html) (`singularity build qsiprep_0.21.4.sif docker://pennlinc/qsiprep:0.21.4`)
@@ -25,3 +26,4 @@ Although you will not be reprocessing this data, note that we used the following
 ```{note}
 If you are the lab replicator, you can jump to [Replication Setup](6_replication_setup.md).
 ```
+

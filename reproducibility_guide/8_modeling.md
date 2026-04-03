@@ -32,6 +32,10 @@ Quality-covariate usage in main figures:
 Note that these sbatch jobs in this script can all be run simultaneously! Feel free to start them all and check back in a couple hours.
 ```
 
+```{note}
+For all `sbatch` commands in this chapter, logs are written to the `logs/` folder in the corresponding script directory (for example, `scripts/3_batch_effects/logs`, `scripts/4_age_effects/logs`, `scripts/5_quality_effects/logs`).
+```
+
 ## 1) Batch effects
 
 ### `calculate_batch_effects.R`

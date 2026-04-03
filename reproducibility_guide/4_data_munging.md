@@ -15,6 +15,10 @@ sbatch munge_data.sh
 
 which in turn runs [scripts/1_munge_data/munge_data.R](https://github.com/PennLINC/Meisler_ABCD_dMRI/tree/main/scripts/1_munge_data/munge_data.R). This produces `${PROJECT_ROOT}/data/raw_data/merged_data.parquet`.
 
+```{note}
+When launched via `sbatch`, logs are written under `scripts/1_munge_data/logs`.
+```
+
 
 ## The basic idea
 

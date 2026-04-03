@@ -46,7 +46,7 @@ for nb in Figure2.ipynb Figure3.ipynb Figure4.ipynb Figure5.ipynb Figure6.ipynb 
 done
 ```
 
-Figures are saved under `${PROJECT_ROOT}/figures/FigureX` with panel-level files in `panels/`.
+Figures are saved under `${PROJECT_ROOT}/figures/FigureX` with panel-level files in `panels/`. In some cases, combined figures are saved out directly by the code. Minor modifications to the figure (fixing text sizes, label placements, etc...) were done post-hoc in Adobe Illustrator.
 
 ## What each figure notebook does
 
@@ -156,3 +156,4 @@ Then run the tract plotting script:
 PY_ENV=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["python_env"])' "$CONFIG_PATH")
 "${PY_ENV}/bin/python" "${PROJECT_ROOT}/scripts/6_figures/brain_plots/plot_steven_metrics.py"
 ```
+
