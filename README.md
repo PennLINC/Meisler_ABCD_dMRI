@@ -15,10 +15,10 @@ This repository covers:
 The fastest way to get oriented is the reproducibility guide:
 
 - [Reproducibility Guide index](reproducibility_guide/0_basic_info.md)
-- [Replication setup](reproducibility_guide/6_replication_setup.md)
-- [Modeling workflow](reproducibility_guide/8_modeling.md)
-- [Main figures](reproducibility_guide/9_figures.md)
-- [Supplemental figures](reproducibility_guide/11_supplement.md)
+- [Replication setup](reproducibility_guide/7_replication_setup.md)
+- [Modeling workflow](reproducibility_guide/9_modeling.md)
+- [Main figures](reproducibility_guide/10_figures.md)
+- [Supplemental figures](reproducibility_guide/12_supplement.md)
 
 If you are replicating the paper analyses (rather than reprocessing raw imaging), begin at Chapter 6 and proceed in order.
 
@@ -46,7 +46,7 @@ If you are replicating the paper analyses (rather than reprocessing raw imaging)
 
 1. Set up `config.json` for your machine (especially `project_root`, `r_env`, `python_env`).
 2. Export `CONFIG_PATH` so scripts can find your config.
-3. Install required R/Python packages (see [Replication setup](reproducibility_guide/6_replication_setup.md)).
+3. Install required R/Python packages (see [Replication setup](reproducibility_guide/7_replication_setup.md)).
 
 ```bash
 export CONFIG_PATH="/absolute/path/to/this/repo/config.json"

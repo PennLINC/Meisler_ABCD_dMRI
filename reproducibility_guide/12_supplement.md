@@ -4,7 +4,7 @@ This chapter documents the scripts and notebooks in `scripts/8_supplement` used 
 
 ```{important}
 Many supplemental analyses require the **full modeling run** across all configured microstructural metrics and quality covariates.  
-This is different from the efficient main-text subset workflow described in [8_modeling.md](8_modeling.md), which intentionally restricts metrics/arrays for Figures 2-7.
+This is different from the efficient main-text subset workflow described in [9_modeling.md](9_modeling.md), which intentionally restricts metrics/arrays for Figures 2-7.
 ```
 
 ## Full-run prerequisites

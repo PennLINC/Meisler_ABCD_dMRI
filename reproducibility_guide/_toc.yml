@@ -9,10 +9,11 @@ chapters:
 - file: 3_postprocessing
 - file: 4_data_munging
 - file: 5_manual_rating
-- file: 6_replication_setup
-- file: 7_harmonization
-- file: 8_modeling
-- file: 9_figures
-- file: 10_results
-- file: 11_supplement
+- file: 6_quality_classifier
+- file: 7_replication_setup
+- file: 8_harmonization
+- file: 9_modeling
+- file: 10_figures
+- file: 11_results
+- file: 12_supplement
 - file: bibliography
