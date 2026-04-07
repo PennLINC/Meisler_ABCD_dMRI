@@ -53,6 +53,10 @@ cp /mnt/isilon/bgdlab_hbcd/projects/meisler_abcd_dmri_new/data/raw_data/merged_d
 
 This provides the raw munged data, filtered for exclusion criteria, in ready-to-harmonize form.
 
+## Quality classifier workflow
+
+Quality-classifier retraining/deployment details are documented in the dedicated classifier chapter (immediately after manual rating), not in setup.
+
 ## SLURM logs
 
 For guide steps that use `sbatch`, job stdout/stderr logs are written to the `logs/` folder inside the corresponding script directory (for example, `scripts/2_harmonize_data/logs`, `scripts/3_batch_effects/logs`).
@@ -66,7 +70,6 @@ A computational environment must have the following packages (and dependencies):
 ```
 install.packages(c(
   "arrow",
-  "ComBatFamily",
   "dplyr",
   "fs",
   "gamm4",
@@ -85,8 +88,8 @@ install.packages(c(
 ))
 ```
 
-and the harmonization requires a certain branch of CombatFamily:
-`remotes::install_github("Nhillman19/ComBatFamily")'
+and the harmonization requires a certain branch of CombatFamily:  
+`remotes::install_github("Nhillman19/ComBatFamily")`
 
 For notebook execution (interactive or headless), also install:
 
@@ -97,10 +100,10 @@ pip install jupyterlab notebook nbconvert
 If you will be rerunning the quality classifier, you will also need the following Python dependencies:
 
 ```
-pip install ipython joblib matplotlib numpy pandas scikit-learn scikit-optimize scipy seaborn xgboost
+pip install ipython joblib matplotlib numpy pandas scikit-learn scikit-optimize scipy seaborn shap xgboost
 ```
 
-If you will be generating brain tract visualizations (`scripts/6_figures/brain_plots`), install this full Python set (listed in full even if overlapping with other steps):
+If you will be generating brain tract visualizations (`scripts/6_figures/brain_plots`), install the following packages:
 
 ```
 pip install numpy pandas matplotlib seaborn scipy Pillow openpyxl
@@ -131,3 +134,4 @@ To make that fallback reliable, launch Jupyter from the project root:
 cd "${PROJECT_ROOT}"
 "${PY_ENV}/bin/jupyter" lab
 ```
+

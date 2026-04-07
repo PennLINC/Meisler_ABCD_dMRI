@@ -22,7 +22,7 @@ You will notice that the GE and Philips images look systematically worse due to 
 
 Raters were then given a "quiz" consisting of 10 hand-selected images that each rater was asked to rate. While some of these images were passing, others contained specific artifacts that were good to attend to. Although there is no “ground truth”, an answer key (written by authors S.L.M. and M.C.) provided explanations for how expert raters would likely rate the images in the quiz set.
 
-An example quiz feedback form / answer key may be found the OSF repo in `manual_qc/quiz_answer_key.html`. Using the rating results from each reviewer, these feedback forms were generated with the following script: [GitHub](https://github.com/PennLINC/Meisler_ABCD_dMRI/tree/main/4_manual_qc/generate_quiz_feedback.ipynb).
+An example quiz feedback form / answer key may be found the OSF repo in `manual_qc/quiz_answer_key.html`.
 
 ```{note}
 We cannot share these all of these images due to restrictions on the ABCD Data Use Agreement and for the privacy of the image reviewers.
@@ -35,13 +35,14 @@ To get the images to raters, we had to make an algorithm to create subsets of th
 
 When we rated the **Siemens** data, a team of 23 trained reviewers evaluated images. During this stage 1,771 Siemens dMRI images from the baseline session were randomly selected so that, across all combinations of our 23 reviewers taken three at a time, each image would receive exactly three independent ratings. Each reviewer rated 231 images equally distributed across 7 quality percentile bins (indexed by the unmasked processed NDC), and each reviewer was paired with each other reviewer 21 times to gauge inter-rater reliability.
 
-This subsetting was done with the following script: (CUBIC: XXX, [GitHub](https://github.com/PennLINC/Meisler_ABCD_dMRI/tree/main/4_manual_qc/create_rater_subsets_siemens.ipynb)).
+This subsetting was done with the following notebook: [scripts/quality_classifier/generate_rater_subsets/create_rater_subsets_siemens.ipynb](https://github.com/PennLINC/Meisler_ABCD_dMRI/blob/main/scripts/quality_classifier/generate_rater_subsets/create_rater_subsets_siemens.ipynb).
 
 For the GE and Philips data, a team of 21 raters (XX of these raters overlapped with the Siemens reviewers) reviewed a total of 1,330 dMRI images, with 665 images coming from each GE and Philips. Each reviewer rated 190 images, with the GE-to-Philips split being roughly half, again divided across 7 quality percentile bins. Each image was rated by 3 reviewers, and raters were paired with one another 19 times to gauge inter-rater reliability.
 
-This subsetting was done with the following script: (CUBIC: XXX, [GitHub](https://github.com/PennLINC/Meisler_ABCD_dMRI/tree/main/4_manual_qc/create_rater_subsets_GE_Philips.ipynb)). 
+This subsetting was done with the following notebook: [scripts/quality_classifier/generate_rater_subsets/create_rater_subsets_GE_Philips.ipynb](https://github.com/PennLINC/Meisler_ABCD_dMRI/blob/main/scripts/quality_classifier/generate_rater_subsets/create_rater_subsets_GE_Philips.ipynb). 
 
-Since data infrastructure changed between rating the Siemens data and the rest of the data, we had to do an additional step to gather the QC JSON inputs for the _dmriprep-viewer_. Using the `rater_assignments.py` created by the `create_rater_subsets_GE_Philips.py` script, we parsed it to make a set of `s5cmd` download commands to get the appropriate JSON files from the centralized data storage. This was done with the following script: (CUBIC: `/cbica/projects/abcd_qsiprep/meisler_ge_philips/create_download_qsiprep_qc_script.py`, [GitHub](https://github.com/PennLINC/Meisler_ABCD_dMRI/tree/main/4_manual_qc/create_download_qsiprep_qc_script.py)). Then, after downloading them with (CUBIC: `sbatch /cbica/projects/abcd_qsiprep/meisler_ge_philips/download_qsiprep_qc.sh`, cannot be shared on GitHub due to containing sensitive subject IDs), we organized them into rater-specific folders with (CUBIC: `/cbica/projects/abcd_qsiprep/meisler_ge_philips/organize_raters_jsons.py`, [GitHub](https://github.com/PennLINC/Meisler_ABCD_dMRI/tree/main/4_manual_qc/organize_raters_jsons.py)). These files were sent to raters.
+Since data infrastructure changed between rating the Siemens data and the rest of the data, we had to do an additional step to gather the QC JSON inputs for the _dmriprep-viewer_. Using the `rater_assignments.py` produced by `create_rater_subsets_GE_Philips.ipynb`, we parsed assignments into `s5cmd` download commands to fetch the corresponding QC JSON files from centralized storage. Those helper scripts were site-specific CUBIC utilities and are not included in this repository.
+
 ## The _dmriprep-viewer_ Interface
 
 The _dmriprep-viewer_ is a web application that allows you to view and rate images. It is available [here](https://www.nipreps.org/dmriprep-viewer/#/). The input to the _dmriprep-viewer_ is the QC JSON files located in the _QSIPrep_ outputs: e.g., `sub-XX/ses-YY/dwi/sub-XX_ses-YY_dwiqc.json`. The viewer interface is shown in the figures below. It allows the user to scroll through the time series, see motion time series, view slice-wise noise estimates, see the T1w-to-dMRI registration, and explore a color fractional anisotropy (FA) map.

@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Table 1 Demographics</title>
+  <style>
+    :root {
+      --bg: #f3f5f8;
+      --panel: #ffffff;
+      --ink: #14213d;
+      --muted: #5f6b7a;
+      --line: #d6dce5;
+      --accent: #0d6e8a;
+      --accent-soft: #e9f5f8;
+      --total: #eef3fb;
+      --shadow: 0 10px 28px rgba(16, 24, 40, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 16%, #dbeaf2 0, transparent 30%),
+        radial-gradient(circle at 88% 88%, #e5eaf8 0, transparent 28%),
+        linear-gradient(165deg, #f4f7fb 0%, #edf1f7 100%);
+      display: grid;
+      place-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .table-card {
+      width: min(1220px, 100%);
+      background: var(--panel);
+      border: 1px solid #e7ecf3;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 1.2rem 1.4rem 0.7rem;
+      border-bottom: 1px solid #edf1f6;
+      background: linear-gradient(180deg, #fafcff 0%, #f7fafd 100%);
+    }
+
+    .kicker {
+      margin: 0;
+      font-size: 0.78rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0.32rem 0 0.25rem;
+      font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+      line-height: 1.2;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      padding: 0.8rem 1rem 1.2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 980px;
+    }
+
+    thead tr:first-child th {
+      font-size: 1.14rem;
+      font-weight: 700;
+      color: #22314f;
+      background: #ffffff;
+      padding-top: 1rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 0;
+    }
+
+    /* Use real borders (not pseudo-elements) so copy/paste renderers keep the split lines */
+    thead tr:first-child th.group-vendor,
+    thead tr:first-child th.demo-group {
+      border-bottom: 2px solid var(--line);
+    }
+
+    /* Structural divider column for paste-safe split between groups */
+    th.split-col,
+    td.split-col {
+      width: 18px;
+      min-width: 18px;
+      padding: 0;
+      border-bottom: 0;
+      background: inherit;
+    }
+
+    /* Continue the second header-row bottom line under row-spanned cells */
+    thead tr:first-child th.session,
+    thead tr:first-child th.total-col,
+    thead tr:first-child th.split-col {
+      border-bottom: 1px solid var(--line);
+    }
+
+    thead tr:nth-child(2) th {
+      font-size: 1.01rem;
+      font-weight: 700;
+      color: #253552;
+      background: #f9fbff;
+      border-bottom: 1px solid var(--line);
+      padding-top: 0.72rem;
+      padding-bottom: 0.72rem;
+    }
+
+    th, td {
+      padding: 0.85rem 0.9rem;
+      text-align: center;
+      border-bottom: 1px solid #ecf0f5;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    th.session,
+    td.session {
+      text-align: left;
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: inherit;
+      font-weight: 700;
+    }
+
+    thead th.session {
+      z-index: 3;
+      background: #f9fbff;
+    }
+
+    tbody tr:nth-child(odd) {
+      background: #fcfdff;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f7faff;
+    }
+
+    tbody tr:hover {
+      background: var(--accent-soft);
+    }
+
+    tbody tr.total {
+      background: var(--total);
+      font-weight: 800;
+    }
+
+    tbody tr.total td {
+      border-top: 2px solid #b8c8e5;
+      border-bottom: 0;
+    }
+
+    .vendor-group {
+      color: #31466f;
+    }
+
+    .demo-group {
+      color: #0f4d63;
+    }
+
+    .foot {
+      padding: 0.65rem 1.35rem 1.2rem;
+      color: #66758a;
+      font-size: 0.84rem;
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 1rem 0.45rem; }
+      .table-header { padding: 1rem 0.85rem 0.62rem; }
+      .table-wrap { padding: 0.55rem 0.5rem 0.9rem; }
+      h1 { font-size: 1.04rem; }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+
+      .table-card {
+        border: 0;
+        box-shadow: none;
+        border-radius: 0;
+        width: 100%;
+      }
+
+      .table-wrap { overflow: visible; }
+      tbody tr:hover { background: inherit; }
+    }
+  </style>
+</head>
+<body>
+  <section class="table-card" aria-label="Demographic table">
+    <header class="table-header">
+      <p class="kicker">ABCD Study</p>
+      <h1>Table 1. Scanner Vendor and Participant Demographics by Session</h1>
+      <p class="sub">Counts are shown by vendor and demographics summary (Age mean [SD], Sex M/F).</p>
+    </header>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="session" rowspan="2" scope="col">Session</th>
+            <th class="group-vendor" colspan="3" scope="colgroup">Scanner Vendor (<em>n</em>)</th>
+            <th class="split-col" rowspan="2" aria-hidden="true"></th>
+            <th class="demo-group" colspan="2" scope="colgroup">Demographics</th>
+            <th class="vendor-group total-col" rowspan="2" scope="col">Total</th>
+          </tr>
+          <tr>
+            <th scope="col">Siemens</th>
+            <th scope="col">GE</th>
+            <th scope="col">Philips</th>
+            <th scope="col">Age (Mean [SD])</th>
+            <th scope="col">Sex (M/F)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="session">Baseline</td>
+            <td>5,414</td>
+            <td>2,174</td>
+            <td>814</td>
+            <td class="split-col" aria-hidden="true"></td>
+            <td>9.97 [0.63]</td>
+            <td>4,364 / 4,038</td>
+            <td>8,402</td>
+          </tr>
+          <tr>
+            <td class="session">Year 2</td>
+            <td>4,335</td>
+            <td>1,736</td>
+            <td>637</td>
+            <td class="split-col" aria-hidden="true"></td>
+            <td>11.99 [0.65]</td>
+            <td>3,604 / 3,104</td>
+            <td>6,708</td>
+          </tr>
+          <tr>
+            <td class="session">Year 4</td>
+            <td>3,685</td>
+            <td>1,446</td>
+            <td>516</td>
+            <td class="split-col" aria-hidden="true"></td>
+            <td>14.16 [0.72]</td>
+            <td>3,024 / 2,623</td>
+            <td>5,647</td>
+          </tr>
+          <tr>
+            <td class="session">Year 6</td>
+            <td>2,067</td>
+            <td>1,043</td>
+            <td>311</td>
+            <td class="split-col" aria-hidden="true"></td>
+            <td>16.08 [0.66]</td>
+            <td>1,796 / 1,625</td>
+            <td>3,421</td>
+          </tr>
+          <tr class="total">
+            <td class="session">Total</td>
+            <td>15,501</td>
+            <td>6,399</td>
+            <td>2,278</td>
+            <td class="split-col" aria-hidden="true"></td>
+            <td>12.37 [2.28]</td>
+            <td>12,788 / 11,390</td>
+            <td>24,178</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="foot">Source values copied from <code>scripts/7_results/Table1.ipynb</code>.</div>
+  </section>
+</body>
+</html>

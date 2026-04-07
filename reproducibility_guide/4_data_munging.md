@@ -60,16 +60,16 @@ This script does the following:
 
 1. Loads `${PROJECT_ROOT}/data/raw_data/merged_data.parquet` (from `munge_data.R`).
 2. Keeps only sessions with `not_excluded == TRUE`.
-3. Requires complete data (no `NA`) across all required `bundle_` columns.
-4. Drops a set of ignored bundle families:
+3. Drops a set of ignored bundle families:
    - `bundle_ProjectionBrainstem_DentatorubrothalamicTract-lr*`
    - `bundle_ProjectionBrainstem_DentatorubrothalamicTract-rl*`
    - `bundle_Commissure_AnteriorCommissure*`
    - `bundle_ProjectionBrainstem_CorticobulbarTractL*`
    - `bundle_ProjectionBrainstem_CorticobulbarTractR*`
+4. Requires complete data (no `NA`) across all required `bundle_` columns.
 5. Creates `software_major` from `scanner_software` (GE/Siemens/Philips version bins).
 6. Creates harmonization batch label `batch_device_software = DeviceSerialNumber + "." + software_major`.
-7. Removes small batches and keeps only `batch_device_software` groups with at least 10 sessions.
+7. Removes small batches, keeping only `batch_device_software` groups with at least 10 sessions.
 
 You can run it with:
 ```bash

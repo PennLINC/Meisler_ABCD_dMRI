@@ -4,10 +4,10 @@ This chapter describes how we harmonize diffusion microstructure metrics across 
 
 The harmonization workflow in this project has two scripts:
 
-1. `scripts/2_harmonize_data/harmonize_data.R`  
+1. [scripts/2_harmonize_data/harmonize_data.R](https://github.com/PennLINC/Meisler_ABCD_dMRI/blob/main/scripts/2_harmonize_data/harmonize_data.R)  
 Runs one SLURM array task per microstructural metric suffix in `config.json` (`microstructural_metrics`). Each task writes one parquet file.
 
-2. `scripts/2_harmonize_data/assemble_harmonized_data.R`  
+2. [scripts/2_harmonize_data/assemble_harmonized_data.R](https://github.com/PennLINC/Meisler_ABCD_dMRI/blob/main/scripts/2_harmonize_data/assemble_harmonized_data.R)  
 Combines all per-metric harmonized parquet files into a single harmonized analysis dataset.
 
 ## Inputs and configuration
@@ -15,8 +15,12 @@ Combines all per-metric harmonized parquet files into a single harmonized analys
 The scripts require:
 
 - `CONFIG_PATH` environment variable pointing to your `config.json`
-- `${PROJECT_ROOT}/data/raw_data/merged_data_meisler_analyses.parquet` (created in the filtering step)
+- `${PROJECT_ROOT}/data/raw_data/merged_data_meisler_analyses.parquet` with quality-classifier/manual-rating columns already added (see [Chapter 6: Automated Quality Classification](6_quality_classifier.md))
 - `scripts/2_harmonize_data/comfam.R` (sourced by `harmonize_data.R`)
+
+```{note}
+Run the [quality-classifier training/deployment workflow](6_quality_classifier.md) before harmonization so the raw analysis parquet already contains `qc_prediction` and related classifier/manual-rating fields used downstream.
+```
 
 Key `config.json` field used by harmonization:
 
@@ -103,6 +107,6 @@ Final assembled output:
 ### Typical failure points
 
 - `CONFIG_PATH` not set or pointing to the wrong file
-- `mergxed_data_meisler_analyses.parquet` missing (filtering step not completed)
+- `merged_data_meisler_analyses.parquet` missing (filtering step not completed)
 - Missing `harm_*.parquet` parts because array jobs failed or array range mismatched `microstructural_metrics`
 - Missing `ComBatFamily` branch required for the longitudinal `comfam`

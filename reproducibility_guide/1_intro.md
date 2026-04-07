@@ -24,6 +24,6 @@ Although you will not be reprocessing this data, note that we used the following
 - [QSIRecon 1.0.0rc2](https://qsirecon.readthedocs.io/en/latest/usage.html) (`singularity build qsirecon_1.0.0rc2.sif docker://pennlinc/qsirecon:1.0.0rc2`)
 
 ```{note}
-If you are the lab replicator, you can jump to [Replication Setup](6_replication_setup.md).
+If you are the lab replicator, you can jump to [Replication Setup](7_replication_setup.md).
 ```
 
