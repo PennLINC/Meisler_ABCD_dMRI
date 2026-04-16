@@ -70,21 +70,36 @@ A computational environment must have the following packages (and dependencies):
 ```
 install.packages(c(
   "arrow",
+  "cowplot",
   "dplyr",
+  "forcats",
   "fs",
   "gamm4",
+  "ggpattern",
   "ggplot2",
+  "grid",
+  "hexbin",
   "IRkernel",
   "jsonlite",
+  "knitr",
   "lme4",
   "mgcv",
+  "nlme",
+  "patchwork",
   "purrr",
   "readr",
   "remotes",
+  "scales",
+  "showtext",
   "stringr",
+  "sysfonts",
   "systemfonts",
   "tibble",
-  "tidyr"
+  "tidyr",
+  "tidyselect",
+  "tidyverse",
+  "tools",
+  "viridis"
 ))
 ```
 
@@ -134,4 +149,3 @@ To make that fallback reliable, launch Jupyter from the project root:
 cd "${PROJECT_ROOT}"
 "${PY_ENV}/bin/jupyter" lab
 ```
-

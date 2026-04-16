@@ -1,6 +1,6 @@
 # Supplemental Figures And Analyses
 
-This chapter documents the scripts and notebooks in `scripts/8_supplement` used to generate supplemental figures (S2-S16) and supporting supplementary tables.
+This chapter documents the scripts and notebooks in `scripts/8_supplement` used to generate supplemental figures (S2-S18) and supporting supplementary tables.
 
 ```{important}
 Many supplemental analyses require the **full modeling run** across all configured microstructural metrics and quality covariates.  
@@ -20,7 +20,7 @@ Before running supplement notebooks, make sure you have completed:
 - Assembled quality effects:
   - `data/quality_effects/quality_effects_all_outputs.rds`
 
-In practice, this usually means running the modeling scripts in Chapter 8 without limiting to the main-text subset arrays.
+In practice, this usually means running the modeling scripts in Chapter 9 without limiting to the main-text subset arrays.
 
 ## Running supplement notebooks
 
@@ -39,7 +39,7 @@ Or execute from CLI:
 
 ```bash
 cd "${PROJECT_ROOT}/scripts/8_supplement"
-for nb in FigureS2_S6.ipynb FigureS7_S9.ipynb FigureS10.ipynb FigureS11.ipynb FigureS12.ipynb FigureS13.ipynb FigureS14.ipynb FigureS15.ipynb FigureS16.ipynb; do
+for nb in FigureS2_S6.ipynb FigureS7_S9.ipynb FigureS10.ipynb FigureS11.ipynb FigureS12.ipynb FigureS13.ipynb FigureS14.ipynb FigureS15.ipynb FigureS16.ipynb FigureS17.ipynb FigureS18.ipynb; do
   "${PY_ENV}/bin/jupyter" nbconvert --to notebook --execute --inplace "$nb"
 done
 ```
@@ -55,10 +55,10 @@ Outputs are written to `${PROJECT_ROOT}/figures/Supplement/FigureS*/`.
 - `FigureS12.ipynb`: cross-vendor correspondence of bundlewise age effects, pre/post harmonization, across all configured microstructural metrics.
 - `FigureS13.ipynb`: cross-metric age-effect correlation heatmap across all configured microstructural metrics.
 - `FigureS14.ipynb`: winner-take-all maximum quality-effect heatmap across all configured microstructural metrics and bundles.
-- `FigureS15.ipynb`: IQM covariance/correlation heatmap from harmonized data.
-- `FigureS16.ipynb`: FA/MD software comparison panels for batch, age, and quality effects.
-
-`FigureS14_old.ipynb` and `FigureS15_old.ipynb` are legacy versions retained in the directory and are not part of the current supplemental figure workflow.
+- `FigureS15.ipynb`: full-dataset supplemental version of Figure 7 (batch mediation/sensitivity grid), with row-2 age-by-IQM scatters colored by scanner vendor and software version encoded as marker shape.
+- `FigureS16.ipynb`: IQM covariance/correlation heatmap from harmonized data.
+- `FigureS17.ipynb`: FA/MD software comparison panels for batch, age, and quality effects.
+- `FigureS18.ipynb`: supplementary panel combining vendor-stratified manual-vs-predicted scatter relationships with SHAP summary.
 
 ## Supplementary tables in `scripts/8_supplement`
 

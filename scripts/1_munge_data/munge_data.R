@@ -97,19 +97,27 @@ final_output_file <- fs::path(output_dir, "merged_data.parquet")
 # AutoTrack bundle geometry metrics to extract from bundlestats files
 shape_metrics <- c(
   "bundle_name",
+  "number_of_tracts",
+  "mean_length_mm",
+  "span_mm",
+  "curl",
+  "elongation",
+  "total_volume_mm3",
   "1st_quarter_volume_mm3",
   "2nd_and_3rd_quarter_volume_mm3",
   "4th_quarter_volume_mm3",
-  "area_of_end_region_1_mm2",
-  "area_of_end_region_2_mm2",
-  "curl",
-  "elongation",
+  "total_surface_area_mm2",
+  "total_radius_of_end_regions_mm",
+  "total_area_of_end_regions_mm2",
   "irregularity",
-  "mean_length_mm",
-  "number_of_tracts",
-  "span_mm",
-  "total_volume_mm3"
+  "area_of_end_region_1_mm2",
+  "radius_of_end_region_1_mm",
+  "volume_of_end_branches_1",
+  "area_of_end_region_2_mm2",
+  "radius_of_end_region_2_mm",
+  "volume_of_end_branches_2"
 )
+
 
 # Scanner QC columns that should be treated as numeric
 qc_numeric_cols <- c(
