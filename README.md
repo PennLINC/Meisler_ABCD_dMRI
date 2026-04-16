@@ -12,7 +12,7 @@ This repository covers:
 
 ## Start Here
 
-The fastest way to get oriented is the reproducibility guide:
+The fastest way to get oriented is the reproducibility guide [https://pennlinc.github.io/Meisler_ABCD_dMRI/](https://pennlinc.github.io/Meisler_ABCD_dMRI/):
 
 - [Reproducibility Guide index](reproducibility_guide/0_basic_info.md)
 - [Replication setup](reproducibility_guide/7_replication_setup.md)
