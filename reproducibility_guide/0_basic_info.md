@@ -1,7 +1,7 @@
 <br>
 <br>
 
-# Welcome to the Meisler et al., (_in preparation_) Reproducibility Guide!
+# Welcome to the Meisler et al., (_under review_) Reproducibility Guide!
 
 ## Basic Information
 
@@ -24,7 +24,7 @@ See paper
 2024
 
 ### Current Project Status
-Manuscript in preparation
+Under Review
 
 ### Datasets
 ABCD-BIDS Community Collection (ABCC)
