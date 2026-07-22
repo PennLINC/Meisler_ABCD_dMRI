@@ -43,14 +43,14 @@ if "steven_quality" not in plt.colormaps():
 # Effect columns: column name -> (colorbar title, color_scheme, vmin, vmax)
 EFFECT_COLUMNS = {
     # "age_effect_no_quality_NODDI_icvf": (
-    #     "Age effect, no quality included (NODDI ICVF)",
+    #     "Age effect size, no quality included (NODDI ICVF)",
     #     "inferno",
     #     0,
     #     0.52,
     # ),
-    "batch_effect_DKI_mkt": ("Batch effect (DKI MKT)", "mako", 0, 0.698),
+    "batch_effect_DKI_mkt": ("Batch effect size (DKI MKT)", "mako", 0, 0.698),
     # "quality_effect_contrast_GQI_fa": (
-    #     "Quality effect (GQI FA)",
+    #     "Quality effect size (GQI FA)",
     #     "steven_quality",
     #     0,
     #     0.138,
