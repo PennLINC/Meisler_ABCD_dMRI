@@ -1,7 +1,7 @@
 <br>
 <br>
 
-# Welcome to the Meisler et al., (_under review_) Reproducibility Guide!
+# Welcome to the Meisler et al., 2026 (_Neuron_) Reproducibility Guide!
 
 ## Basic Information
 
