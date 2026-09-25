@@ -24,7 +24,7 @@ See paper
 2024
 
 ### Current Project Status
-Under Review
+Accepted
 
 ### Datasets
 ABCD-BIDS Community Collection (ABCC)
